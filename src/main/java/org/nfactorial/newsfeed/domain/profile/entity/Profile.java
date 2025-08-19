@@ -31,4 +31,11 @@ public class Profile {
     private int followCount;
 
     private LocalDateTime deletedAt;
+
+    public Profile(Account account, String nickname, String mbti, String introduce) {
+        this.account = account;
+        this.nickname = nickname;
+        this.mbti = mbti;
+        this.introduce = introduce;
+    }
 }
