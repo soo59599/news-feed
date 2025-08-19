@@ -1,26 +1,47 @@
 package org.nfactorial.newsfeed.domain.post.entity;
 
-import jakarta.persistence.*;
+import org.nfactorial.newsfeed.common.entity.BaseTimeEntity;
+import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
+import org.nfactorial.newsfeed.domain.post.mock.MockAuthProfileDto;
+import org.nfactorial.newsfeed.domain.profile.entity.Profile;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.nfactorial.newsfeed.common.entity.BaseTimeEntity;
-import org.nfactorial.newsfeed.domain.profile.entity.Profile;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
-@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Profile profile;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Profile profile;
 
-    private String content;
+	private String content;
 
-    private int likeCount;
+	private int likeCount;
+
+	public static Post createPost(PostCreateRequest request, Profile profile) {
+		Post post = new Post();
+		post.content = request.content();
+		post.profile = profile;
+		post.likeCount = 0;
+		return post;
+	}
+
+	//TODO 프로필 받고 지우기!
+	public static Post of(PostCreateRequest request, MockAuthProfileDto currentUserProfile) {
+		Post post = new Post();
+		post.content = request.content();
+		return post;
+	}
 }

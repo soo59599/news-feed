@@ -1,3 +1,5 @@
 spring:
+  application:
+    name: news-feed
   profiles:
     active: dev
