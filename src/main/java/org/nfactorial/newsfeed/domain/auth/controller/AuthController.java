@@ -32,13 +32,13 @@ public class AuthController {
 		SignUpCommand signUpCommand = SignUpCommand.of(signUpRequest);
 		SignUpResult result = authService.signUp(signUpCommand);
 		SignUpResponse response = SignUpResponse.of(result);
-		return GlobalApiResponse.of(SuccessCode.ACCOUNT_CREATED, response);
+		return GlobalApiResponse.of(SuccessCode.CREATED, response);
 	}
 
 	@PostMapping("/login")
 	public GlobalApiResponse<?> login(@Valid @RequestBody LoginRequest loginRequest) {
 		LoginCommand loginCommand = LoginCommand.of(loginRequest);
 		String token = authService.login(loginCommand);
-		return GlobalApiResponse.of(SuccessCode.LOGIN_SUCCESS, new LoginResponse(token));
+		return GlobalApiResponse.of(SuccessCode.OK, new LoginResponse(token));
 	}
 }
