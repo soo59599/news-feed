@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode implements GlobalResponseCode {
 	NOT_AUTHENTICATED("AUTH-401", "인증이 필요합니다.", HttpStatus.UNAUTHORIZED),
+	EMAIL_DUPLICATED("AUTH-400", "중복되는 이메일입니다.", HttpStatus.BAD_REQUEST),
+	NICKNAME_DUPLICATED("AUTH-400", "중복되는 닉네임입니다.", HttpStatus.BAD_REQUEST),
 	;
 
 	private final String code;
