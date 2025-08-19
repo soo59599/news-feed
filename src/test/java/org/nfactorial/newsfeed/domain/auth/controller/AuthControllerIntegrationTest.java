@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpRequest;
-import org.nfactorial.newsfeed.domain.auth.service.ProfileService;
-import org.nfactorial.newsfeed.domain.auth.service.ProfileServiceApi;
+import org.nfactorial.newsfeed.domain.auth.mock.AuthMockProfileService;
+import org.nfactorial.newsfeed.domain.auth.service.AuthProfileServiceApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,7 +37,7 @@ class AuthControllerIntegrationTest {
 	private ObjectMapper objectMapper;
 
 	@MockitoBean
-	private ProfileService profileService;
+	private AuthMockProfileService profileService;
 
 	@Nested
 	@DisplayName("회원가입")
@@ -52,7 +52,7 @@ class AuthControllerIntegrationTest {
 				.nickname("testuser")
 				.build();
 
-			ProfileServiceApi.CreateProfileCommand createProfileCommand = ProfileServiceApi.CreateProfileCommand.builder()
+			AuthProfileServiceApi.CreateProfileCommand createProfileCommand = AuthProfileServiceApi.CreateProfileCommand.builder()
 				.nickname("testuser")
 				.build();
 

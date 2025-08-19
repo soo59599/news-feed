@@ -2,7 +2,9 @@ package org.nfactorial.newsfeed.domain.auth.service;
 
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
+import org.nfactorial.newsfeed.common.security.JwtUtil;
 import org.nfactorial.newsfeed.domain.auth.component.PasswordEncoder;
+import org.nfactorial.newsfeed.domain.auth.dto.LoginCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpResult;
 import org.nfactorial.newsfeed.domain.auth.entity.Account;
@@ -19,7 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthService {
 	private final AccountRepository accountRepository;
 	private final PasswordEncoder passwordencoder;
-	private final ProfileServiceApi profileServiceApi;
+	private final AuthProfileServiceApi profileService;
+	private final JwtUtil jwtUtil;
 
 	@Transactional
 	public SignUpResult signUp(SignUpCommand signUpCommand) {
@@ -31,7 +34,7 @@ public class AuthService {
 		}
 
 		// 닉네임 중복 여부 검사
-		boolean isNicknameDuplicated = profileServiceApi.isNicknameDuplicated(signUpCommand.nickname());
+		boolean isNicknameDuplicated = profileService.isNicknameDuplicated(signUpCommand.nickname());
 		if (isNicknameDuplicated) {
 			log.error("Duplicated nickname: {}", signUpCommand.nickname());
 			throw new BusinessException(ErrorCode.NICKNAME_DUPLICATED);
@@ -40,18 +43,27 @@ public class AuthService {
 		String encodedPassword = passwordencoder.encode(signUpCommand.password());
 		Account newAccount = Account.signUp(signUpCommand.email(), encodedPassword);
 		Account savedAccount = accountRepository.save(newAccount);
-		ProfileServiceApi.CreateProfileCommand createProfileCommand = ProfileServiceApi.CreateProfileCommand.builder()
+		AuthProfileServiceApi.CreateProfileCommand createProfileCommand = AuthProfileServiceApi.CreateProfileCommand.builder()
 			.accountId(savedAccount.getId())
 			.nickname(signUpCommand.nickname())
 			.mbti(signUpCommand.mbti())
 			.introduce(signUpCommand.introduce())
 			.build();
-		String savedNickname = profileServiceApi.createProfile(createProfileCommand);
+		String savedNickname = profileService.createProfile(createProfileCommand);
 
 		return SignUpResult.builder()
 			.accountId(savedAccount.getId())
 			.email(savedAccount.getEmail())
 			.nickname(savedNickname)
 			.build();
+	}
+
+	public String login(LoginCommand loginCommand) {
+		Account account = accountRepository.findByEmail(loginCommand.email())
+			.orElseThrow(() -> new BusinessException(ErrorCode.LOGIN_FAILED));
+		if (passwordencoder.matches(loginCommand.password(), account.getPassword()) == false) {
+			throw new BusinessException(ErrorCode.LOGIN_FAILED);
+		}
+		return jwtUtil.createToken(account.getId());
 	}
 }

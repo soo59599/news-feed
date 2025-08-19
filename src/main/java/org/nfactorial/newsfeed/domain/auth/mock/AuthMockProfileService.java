@@ -1,10 +1,11 @@
-package org.nfactorial.newsfeed.domain.auth.service;
+package org.nfactorial.newsfeed.domain.auth.mock;
 
+import org.nfactorial.newsfeed.domain.auth.service.AuthProfileServiceApi;
 import org.springframework.stereotype.Service;
 
 // TODO: Profile Service 구현해주세요!!!
 @Service
-public class ProfileService implements ProfileServiceApi {
+public class AuthMockProfileService implements AuthProfileServiceApi {
 	@Override
 	public boolean isNicknameDuplicated(String nickname) {
 		return false;

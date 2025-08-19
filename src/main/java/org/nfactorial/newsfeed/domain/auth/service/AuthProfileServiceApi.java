@@ -2,7 +2,7 @@ package org.nfactorial.newsfeed.domain.auth.service;
 
 import lombok.Builder;
 
-public interface ProfileServiceApi {
+public interface AuthProfileServiceApi {
 	boolean isNicknameDuplicated(String nickname);
 
 	String createProfile(CreateProfileCommand createProfileCommand);

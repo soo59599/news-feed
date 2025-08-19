@@ -2,6 +2,9 @@ package org.nfactorial.newsfeed.domain.auth.controller;
 
 import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
+import org.nfactorial.newsfeed.domain.auth.dto.LoginCommand;
+import org.nfactorial.newsfeed.domain.auth.dto.LoginRequest;
+import org.nfactorial.newsfeed.domain.auth.dto.LoginResponse;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpRequest;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpResponse;
@@ -25,10 +28,17 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.CREATED)
-	public GlobalApiResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+	public GlobalApiResponse<?> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
 		SignUpCommand signUpCommand = SignUpCommand.of(signUpRequest);
 		SignUpResult result = authService.signUp(signUpCommand);
 		SignUpResponse response = SignUpResponse.of(result);
 		return GlobalApiResponse.of(SuccessCode.ACCOUNT_CREATED, response);
+	}
+
+	@PostMapping("/login")
+	public GlobalApiResponse<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+		LoginCommand loginCommand = LoginCommand.of(loginRequest);
+		String token = authService.login(loginCommand);
+		return GlobalApiResponse.of(SuccessCode.LOGIN_SUCCESS, new LoginResponse(token));
 	}
 }
