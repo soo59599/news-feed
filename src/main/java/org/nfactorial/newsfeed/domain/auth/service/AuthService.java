@@ -60,6 +60,7 @@ public class AuthService {
 			.build();
 	}
 
+	@Transactional(readOnly = true)
 	public String login(LoginCommand loginCommand) {
 		Account account = accountRepository.findByEmail(loginCommand.email())
 			.orElseThrow(() -> new BusinessException(ErrorCode.LOGIN_FAILED));
