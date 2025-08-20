@@ -1,9 +1,12 @@
 package org.nfactorial.newsfeed.domain.auth.service;
 
+import java.util.Optional;
+
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.common.security.JwtUtil;
+import org.nfactorial.newsfeed.common.security.TokenBlacklist;
 import org.nfactorial.newsfeed.domain.auth.component.PasswordEncoder;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpCommand;
@@ -26,6 +29,7 @@ public class AuthService {
 	private final PasswordEncoder passwordencoder;
 	private final ProfileServiceApi profileService;
 	private final JwtUtil jwtUtil;
+	private final TokenBlacklist tokenBlacklist;
 
 	@Transactional
 	public SignUpResult signUp(SignUpCommand signUpCommand) {
@@ -85,5 +89,10 @@ public class AuthService {
 		}
 		account.setDeleted();
 		profileService.deleteFromAccountId(accountId);
+	}
+
+	public void logout(Optional<String> token) {
+		String tokenStr = token.orElseThrow(() -> new BusinessException(ErrorCode.INVALID_TOKEN));
+		tokenBlacklist.addToken(tokenStr);
 	}
 }

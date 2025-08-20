@@ -16,11 +16,12 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
-	private static final String AUTH_HEADER = "Authorization";
-	private static final String BEARER_PREFIX = "Bearer ";
+	public static final String AUTH_HEADER = "Authorization";
+	public static final String BEARER_PREFIX = "Bearer ";
 	public static final String ACCOUNT_ID_ATTR = "accountId";
 
 	private final JwtUtil jwtUtil;
+	private final TokenBlacklist tokenBlacklist;
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws
@@ -29,6 +30,7 @@ public class JwtFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		getHeader(httpServletRequest)
 			.flatMap(this::getBearerToken)
+			.filter(token -> tokenBlacklist.hasToken(token) == false)
 			.map(jwtUtil::getAccountId)
 			.ifPresent(accountId -> {
 				request.setAttribute(ACCOUNT_ID_ATTR, accountId);

@@ -1,5 +1,9 @@
 package org.nfactorial.newsfeed.domain.auth.controller;
 
+import static org.nfactorial.newsfeed.common.security.JwtFilter.*;
+
+import java.util.Optional;
+
 import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.common.security.AuthProfile;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -50,5 +55,24 @@ public class AuthController {
 		@AuthProfile AuthProfileDto authProfile) {
 		authService.withdraw(authProfile, request.password());
 		return GlobalApiResponse.of(SuccessCode.OK, null);
+	}
+
+	@PostMapping("/logout")
+	public GlobalApiResponse<?> logout(@AuthProfile AuthProfileDto authProfile, HttpServletRequest httpServletRequest) {
+		Optional<String> token = getHeader(httpServletRequest)
+			.flatMap(this::getBearerToken);
+		authService.logout(token);
+		return GlobalApiResponse.of(SuccessCode.OK, null);
+	}
+
+	private Optional<String> getHeader(HttpServletRequest httpServletRequest) {
+		return Optional.ofNullable(httpServletRequest.getHeader(AUTH_HEADER));
+	}
+
+	private Optional<String> getBearerToken(String header) {
+		if (header.startsWith(BEARER_PREFIX)) {
+			return Optional.of(header.substring(BEARER_PREFIX.length()));
+		}
+		return Optional.empty();
 	}
 }
