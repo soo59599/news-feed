@@ -5,10 +5,12 @@ import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostUpdateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostCreateResponse;
+import org.nfactorial.newsfeed.domain.post.dto.response.PostGetOneResponse;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostUpdateResponse;
 import org.nfactorial.newsfeed.domain.post.mock.MockAuthProfileDto;
 import org.nfactorial.newsfeed.domain.post.service.PostService;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +50,15 @@ public class PostController {
 		//TODO 프로필 받고 변경하기!
 		MockAuthProfileDto currentUserProfile = new MockAuthProfileDto(1L, "이름");
 		PostUpdateResponse response = postService.update(postId, request, currentUserProfile);
+
+		return GlobalApiResponse.of(SuccessCode.OK, response);
+	}
+
+	@GetMapping("/{postId}")
+	@ResponseStatus(HttpStatus.OK)
+	public GlobalApiResponse<PostGetOneResponse> findById(@PathVariable Long postId) {
+
+		PostGetOneResponse response = postService.findById(postId);
 
 		return GlobalApiResponse.of(SuccessCode.OK, response);
 	}

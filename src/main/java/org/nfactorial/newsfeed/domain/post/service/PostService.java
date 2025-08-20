@@ -5,6 +5,7 @@ import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostUpdateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostCreateResponse;
+import org.nfactorial.newsfeed.domain.post.dto.response.PostGetOneResponse;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostUpdateResponse;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
 import org.nfactorial.newsfeed.domain.post.mock.MockAuthProfileDto;
@@ -43,5 +44,17 @@ public class PostService {
 		foundPost.updateContent(request);
 
 		return PostUpdateResponse.of(foundPost);
+	}
+
+	@Transactional(readOnly = true)
+	public PostGetOneResponse findById(Long postId) {
+
+		Post foundPost = postRepository.findById(postId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+		//TODO comment 받고 변경
+		int commentCount = 0;
+
+		return PostGetOneResponse.of(foundPost, commentCount);
 	}
 }
