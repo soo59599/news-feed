@@ -17,8 +17,7 @@ public enum ErrorCode implements GlobalResponseCode {
 	POST_NOT_FOUND("POST-404", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 	POST_ACCESS_DENIED("POST-403", "게시글에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
 	PASSWORD_DOESNT_MATCH("AUTH-401-2", "비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
-	PROFILE_NOT_FOUND("PROFILE-404", "프로필을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
-	PASSWORD_DOESNT_MATCH("AUTH-401-2", "비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
+	PROFILE_NOT_FOUND("PROFILE-404", "프로필을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
 	// Interaction
 	LIKE_ALREADY_EXISTS("INTR-409", "이미 좋아요를 누른 게시물입니다.", HttpStatus.CONFLICT);
