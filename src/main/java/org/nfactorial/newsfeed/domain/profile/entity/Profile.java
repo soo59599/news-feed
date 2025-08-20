@@ -38,6 +38,12 @@ public class Profile {
         this.deletedAt = LocalDateTime.now();
     }
 
+    public void update(String nickname, String mbti, String introduce) {
+        this.nickname = nickname;
+        this.mbti = mbti;
+        this.introduce = introduce;
+    }
+
 	public void incrementFollowCount() {
 		this.followCount++;
 	}
