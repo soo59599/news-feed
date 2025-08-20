@@ -2,6 +2,8 @@ package org.nfactorial.newsfeed.domain.auth.controller;
 
 import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
+import org.nfactorial.newsfeed.common.security.AuthProfile;
+import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginRequest;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginResponse;
@@ -9,6 +11,7 @@ import org.nfactorial.newsfeed.domain.auth.dto.SignUpCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpRequest;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpResponse;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpResult;
+import org.nfactorial.newsfeed.domain.auth.dto.WithdrawRequest;
 import org.nfactorial.newsfeed.domain.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,5 +43,12 @@ public class AuthController {
 		LoginCommand loginCommand = LoginCommand.of(loginRequest);
 		String token = authService.login(loginCommand);
 		return GlobalApiResponse.of(SuccessCode.OK, new LoginResponse(token));
+	}
+
+	@PostMapping("/withdraw")
+	public GlobalApiResponse<?> withdraw(@Valid @RequestBody WithdrawRequest request,
+		@AuthProfile AuthProfileDto authProfile) {
+		authService.withdraw(authProfile, request.password());
+		return GlobalApiResponse.of(SuccessCode.OK, null);
 	}
 }

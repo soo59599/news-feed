@@ -4,5 +4,9 @@ import org.nfactorial.newsfeed.domain.profile.dto.request.CreateProfileCommand;
 
 public interface ProfileServiceApi {
 	boolean isNicknameDuplicated(String nickname);
+
 	long createProfile(CreateProfileCommand createProfileCommand);
+
+	// TODO 구현해주십셔!
+	void deleteFromAccountId(long accountId);
 }

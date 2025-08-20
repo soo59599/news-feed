@@ -2,6 +2,7 @@ package org.nfactorial.newsfeed.domain.auth.service;
 
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
+import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.common.security.JwtUtil;
 import org.nfactorial.newsfeed.domain.auth.component.PasswordEncoder;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginCommand;
@@ -72,5 +73,17 @@ public class AuthService {
 	public Account getAccountById(long accountId) {
 		return accountRepository.findById(accountId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+	}
+
+	@Transactional
+	public void withdraw(AuthProfileDto authProfile, String password) {
+		long accountId = authProfile.accountId();
+		Account account = accountRepository.findById(accountId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+		if (passwordencoder.matches(password, account.getPassword()) == false) {
+			throw new BusinessException(ErrorCode.PASSWORD_DOESNT_MATCH);
+		}
+		account.setDeleted();
+		profileService.deleteFromAccountId(accountId);
 	}
 }

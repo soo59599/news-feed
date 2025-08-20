@@ -11,7 +11,6 @@ public record SignUpResponse(
 	public static SignUpResponse of(SignUpResult signUpResult) {
 		return SignUpResponse.builder()
 			.accountId(signUpResult.accountId())
-			.nickname(signUpResult.nickname())
 			.email(signUpResult.email())
 			.build();
 	}

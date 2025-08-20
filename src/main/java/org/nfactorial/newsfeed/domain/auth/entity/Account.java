@@ -45,4 +45,8 @@ public class Account extends BaseTimeEntity {
 			null
 		);
 	}
+
+	public void setDeleted() {
+		deletedAt = LocalDateTime.now();
+	}
 }

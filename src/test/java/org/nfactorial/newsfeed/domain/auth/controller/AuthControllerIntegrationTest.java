@@ -11,14 +11,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginRequest;
+import org.nfactorial.newsfeed.domain.auth.dto.LoginResponse;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpRequest;
+import org.nfactorial.newsfeed.domain.auth.dto.WithdrawRequest;
 import org.nfactorial.newsfeed.domain.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -216,6 +220,61 @@ class AuthControllerIntegrationTest {
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(loginRequest)))
 				.andExpect(status().isUnauthorized());
+		}
+	}
+
+	@Nested
+	@DisplayName("회원 탈퇴")
+	class Withdraw {
+		private String accessToken;
+
+		@BeforeEach
+		void setUp() throws Exception {
+			// given
+			SignUpRequest signUpRequest = new SignUpRequest("test@test.com", "password", "testuser", null, null);
+			authService.signUp(SignUpCommand.of(signUpRequest));
+
+			LoginRequest loginRequest = new LoginRequest("test@test.com", "password");
+			MvcResult result = mockMvc.perform(post("/api/v1/auth/login")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(objectMapper.writeValueAsString(loginRequest)))
+				.andExpect(status().isOk())
+				.andReturn();
+
+			String responseBody = result.getResponse().getContentAsString();
+			accessToken = objectMapper.readTree(responseBody).get("data").get("accessToken").asText();
+		}
+
+		@Test
+		@DisplayName("성공")
+		void withdraw_success() throws Exception {
+			// given
+			WithdrawRequest request = new WithdrawRequest("password");
+
+			// when & then
+			mockMvc.perform(post("/api/v1/auth/withdraw")
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.code").value("SUCC-200"))
+				.andDo(print());
+		}
+
+		@Test
+		@DisplayName("실패 - 잘못된 비밀번호")
+		void withdraw_fail_wrongPassword() throws Exception {
+			// given
+			WithdrawRequest request = new WithdrawRequest("wrongpassword");
+
+			// when & then
+			mockMvc.perform(post("/api/v1/auth/withdraw")
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.code").value("AUTH-401-2"))
+				.andDo(print());
 		}
 	}
 }
