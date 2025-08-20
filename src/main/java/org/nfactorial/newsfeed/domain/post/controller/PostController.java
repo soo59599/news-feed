@@ -2,12 +2,13 @@ package org.nfactorial.newsfeed.domain.post.controller;
 
 import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
+import org.nfactorial.newsfeed.common.security.AuthProfile;
+import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostUpdateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostCreateResponse;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostGetOneResponse;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostUpdateResponse;
-import org.nfactorial.newsfeed.domain.post.mock.MockAuthProfileDto;
 import org.nfactorial.newsfeed.domain.post.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,11 +33,9 @@ public class PostController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	// public GlobalApiResponse<PostCreateResponse> createPost(@AuthProfile AuthProfileDto currentUserProfile, @Valid @RequestBody PostCreateRequest request){
-	public GlobalApiResponse<PostCreateResponse> createPost(@Valid @RequestBody PostCreateRequest request) {
+	public GlobalApiResponse<PostCreateResponse> createPost(@AuthProfile AuthProfileDto currentUserProfile,
+		@Valid @RequestBody PostCreateRequest request) {
 
-		//TODO 프로필 받고 변경하기!
-		MockAuthProfileDto currentUserProfile = new MockAuthProfileDto(1L, "이름");
 		PostCreateResponse response = postService.save(request, currentUserProfile);
 
 		return GlobalApiResponse.of(SuccessCode.CREATED, response);
@@ -44,12 +43,9 @@ public class PostController {
 
 	@PatchMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
-	// public GlobalApiResponse<PostCreateResponse> createPost(@AuthProfile AuthProfileDto currentUserProfile, @Valid @RequestBody PostCreateRequest request){
 	public GlobalApiResponse<PostUpdateResponse> update(@PathVariable Long postId,
-		@Valid @RequestBody PostUpdateRequest request) {
+		@AuthProfile AuthProfileDto currentUserProfile, @Valid @RequestBody PostUpdateRequest request) {
 
-		//TODO 프로필 받고 변경하기!
-		MockAuthProfileDto currentUserProfile = new MockAuthProfileDto(1L, "이름");
 		PostUpdateResponse response = postService.update(postId, request, currentUserProfile);
 
 		return GlobalApiResponse.of(SuccessCode.OK, response);
@@ -66,10 +62,8 @@ public class PostController {
 
 	@DeleteMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
-	public GlobalApiResponse<Void> deleteById(@PathVariable Long postId) {
-
-		//TODO 프로필 받고 변경하기!
-		MockAuthProfileDto currentUserProfile = new MockAuthProfileDto(1L, "이름");
+	public GlobalApiResponse<Void> deleteById(@PathVariable Long postId,
+		@AuthProfile AuthProfileDto currentUserProfile) {
 
 		postService.deleteById(postId, currentUserProfile);
 

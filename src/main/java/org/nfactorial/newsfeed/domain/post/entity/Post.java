@@ -41,16 +41,8 @@ public class Post extends BaseTimeEntity {
 		return post;
 	}
 
-	//TODO 프로필 받고 지우기
-	public static Post of(PostCreateRequest request, MockAuthProfileDto profile) {
-		Post post = new Post();
-		post.content = request.content();
-		post.likeCount = 0;
-		return post;
-	}
-
-	public void updateContent(PostUpdateRequest request) {
-		this.content = request.content();
+	public void updateContent(String updatedContent) {
+		this.content = updatedContent;
 	}
 
 	public void incrementLikeCount() {
