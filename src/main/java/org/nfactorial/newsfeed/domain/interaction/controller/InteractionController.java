@@ -35,4 +35,13 @@ public class InteractionController {
 		interactionService.cancelLike(postId, currentProfile.profileId());
 		return new GlobalApiResponse<>(SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), null);
 	}
+
+	@PostMapping("/api/v1/profiles/{followingId}/follows")
+	public GlobalApiResponse<Void> followProfile(
+		@PathVariable Long followingId,
+		@AuthProfile AuthProfileDto currentProfile) {
+
+		interactionService.followProfile(currentProfile.profileId(), followingId);
+		return new GlobalApiResponse<>(SuccessCode.CREATED.getCode(), SuccessCode.CREATED.getMessage(), null);
+	}
 }
