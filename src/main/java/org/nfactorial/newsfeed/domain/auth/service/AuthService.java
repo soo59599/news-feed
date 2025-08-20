@@ -43,20 +43,18 @@ public class AuthService {
 		}
 
 		String encodedPassword = passwordencoder.encode(signUpCommand.password());
-		Account newAccount = Account.signUp(signUpCommand.email(), encodedPassword);
-		Account savedAccount = accountRepository.save(newAccount);
 		CreateProfileCommand createProfileCommand = CreateProfileCommand.builder()
-			.account(savedAccount)
 			.nickname(signUpCommand.nickname())
 			.mbti(signUpCommand.mbti())
 			.introduce(signUpCommand.introduce())
 			.build();
-		String savedNickname = profileService.createProfile(createProfileCommand);
+		long profiledId = profileService.createProfile(createProfileCommand);
+		Account newAccount = Account.signUp(signUpCommand.email(), encodedPassword, profiledId);
+		Account savedAccount = accountRepository.save(newAccount);
 
 		return SignUpResult.builder()
 			.accountId(savedAccount.getId())
 			.email(savedAccount.getEmail())
-			.nickname(savedNickname)
 			.build();
 	}
 

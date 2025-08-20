@@ -5,7 +5,6 @@ import lombok.Builder;
 @Builder
 public record SignUpResult(
 	long accountId,
-	String nickname,
 	String email
 ) {
 }

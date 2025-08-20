@@ -23,6 +23,9 @@ public class Account extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false, unique = true)
+	private Long profiledId;
+
 	// 로그인용
 	@Column(nullable = false, unique = true)
 	private String email;
@@ -33,9 +36,10 @@ public class Account extends BaseTimeEntity {
 	// 회원 탈퇴 확인용
 	private LocalDateTime deletedAt;
 
-	public static Account signUp(String email, String password) {
+	public static Account signUp(String email, String password, long profiledId) {
 		return new Account(
 			null,
+			profiledId,
 			email,
 			password,
 			null
