@@ -7,7 +7,7 @@ import org.nfactorial.newsfeed.domain.post.entity.Post;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LikesRepository extends JpaRepository<Like, Long> {
+public interface LikeRepository extends JpaRepository<Like, Long> {
 
 	boolean existsByPostIdAndProfileId(Long postId, Long profileId);
 
