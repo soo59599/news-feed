@@ -10,6 +10,7 @@ import org.nfactorial.newsfeed.domain.post.dto.response.PostUpdateResponse;
 import org.nfactorial.newsfeed.domain.post.mock.MockAuthProfileDto;
 import org.nfactorial.newsfeed.domain.post.service.PostService;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,6 +62,18 @@ public class PostController {
 		PostGetOneResponse response = postService.findById(postId);
 
 		return GlobalApiResponse.of(SuccessCode.OK, response);
+	}
+
+	@DeleteMapping("/{postId}")
+	@ResponseStatus(HttpStatus.OK)
+	public GlobalApiResponse<Void> deleteById(@PathVariable Long postId) {
+
+		//TODO 프로필 받고 변경하기!
+		MockAuthProfileDto currentUserProfile = new MockAuthProfileDto(1L, "이름");
+
+		postService.deleteById(postId, currentUserProfile);
+
+		return GlobalApiResponse.of(SuccessCode.OK, null);
 	}
 
 }
