@@ -2,7 +2,9 @@ package org.nfactorial.newsfeed.domain.interaction.service;
 
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
+import org.nfactorial.newsfeed.domain.interaction.entity.Follow;
 import org.nfactorial.newsfeed.domain.interaction.entity.Like;
+import org.nfactorial.newsfeed.domain.interaction.repository.FollowRepository;
 import org.nfactorial.newsfeed.domain.interaction.repository.LikesRepository;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
 import org.nfactorial.newsfeed.domain.post.service.PostService;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class InteractionService {
 
 	private final LikesRepository likesRepository;
+	private final FollowRepository followRepository;
 	private final PostService postService;
 	private final ProfileService profileService;
 
@@ -48,4 +51,21 @@ public class InteractionService {
 		savedPost.decrementLikeCount();
 	}
 
+	@Transactional
+	public void followProfile(Long followerId, Long followingId) {
+
+		if (followerId.equals(followingId)) {
+			throw new BusinessException(ErrorCode.CANNOT_FOLLOW_SELF);
+		}
+
+		Profile follower = profileService.getProfileById(followerId);
+		Profile following = profileService.getProfileById(followingId);
+
+		if (followRepository.existsByFollowerAndFollowing(follower, following)) {
+			throw new BusinessException(ErrorCode.FOLLOWING_ALREADY_EXISTS);
+		}
+
+		followRepository.save(Follow.of(follower, following));
+		follower.incrementFollowCount();
+	}
 }

@@ -37,4 +37,8 @@ public class Profile {
     public void softDelete() {
         this.deletedAt = LocalDateTime.now();
     }
+
+	public void incrementFollowCount() {
+		this.followCount++;
+	}
 }
