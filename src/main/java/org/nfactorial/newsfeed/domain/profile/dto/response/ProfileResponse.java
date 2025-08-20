@@ -1,7 +1,5 @@
 package org.nfactorial.newsfeed.domain.profile.dto.response;
 
-import org.nfactorial.newsfeed.domain.profile.entity.Profile;
-
 import lombok.Builder;
 
 @Builder
