@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
+import org.nfactorial.newsfeed.domain.comment.dto.CommentListByPostResult;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentCommand;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResult;
 import org.nfactorial.newsfeed.domain.comment.entity.Comment;
@@ -54,6 +55,13 @@ public class CommentService implements CommentServiceApi {
 		Comment comment = getOwnedComment(commentId, profileId);
 		comment.updateContent(content);
 		return comment.getContent();
+	}
+
+	@Transactional(readOnly = true)
+	public CommentListByPostResult commentListByPost(long postId) {
+		Post post = postService.getPostById(postId);
+		List<Comment> comments = commentRepository.findAllByPost(post);
+		return CommentListByPostResult.of(comments);
 	}
 
 	private Comment getOwnedComment(long commentId, long profileId) {

@@ -4,6 +4,8 @@ import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.common.security.AuthProfile;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
+import org.nfactorial.newsfeed.domain.comment.dto.CommentListByPostResult;
+import org.nfactorial.newsfeed.domain.comment.dto.GetCommentsFromPostResponse;
 import org.nfactorial.newsfeed.domain.comment.dto.UpdateCommentRequest;
 import org.nfactorial.newsfeed.domain.comment.dto.UpdateCommentResponse;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentCommand;
@@ -12,6 +14,7 @@ import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResponse;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResult;
 import org.nfactorial.newsfeed.domain.comment.service.CommentService;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +30,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1")
 public class CommentController {
 	private final CommentService commentService;
+
+	@GetMapping("/posts/{postId}/comments")
+	public GlobalApiResponse<?> getCommentsFromPost(@PathVariable("postId") long postId) {
+		CommentListByPostResult result = commentService.commentListByPost(postId);
+		return GlobalApiResponse.of(SuccessCode.OK, GetCommentsFromPostResponse.of(result));
+	}
 
 	@PostMapping("/posts/{postId}/comments")
 	public GlobalApiResponse<?> writeComment(@PathVariable("postId") long postId,
