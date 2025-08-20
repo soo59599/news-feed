@@ -4,7 +4,7 @@ import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.common.security.AuthProfile;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
-import org.nfactorial.newsfeed.domain.interaction.service.InteractionService;
+import org.nfactorial.newsfeed.domain.interaction.service.FollowService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,34 +14,16 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class InteractionController {
+public class FollowController {
 
-	private final InteractionService interactionService;
-
-	@PostMapping("/api/v1/posts/{postId}/likes")
-	public GlobalApiResponse<Void> addLike(
-		@PathVariable Long postId,
-		@AuthProfile AuthProfileDto currentProfile) {
-
-		interactionService.addLike(postId, currentProfile.profileId());
-		return new GlobalApiResponse<>(SuccessCode.CREATED.getCode(), SuccessCode.CREATED.getMessage(), null);
-	}
-
-	@DeleteMapping("/api/v1/posts/{postId}/likes")
-	public GlobalApiResponse<Void> cancelLike(
-		@PathVariable Long postId,
-		@AuthProfile AuthProfileDto currentProfile) {
-
-		interactionService.cancelLike(postId, currentProfile.profileId());
-		return new GlobalApiResponse<>(SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), null);
-	}
+	private final FollowService followService;
 
 	@PostMapping("/api/v1/profiles/{followingId}/follows")
 	public GlobalApiResponse<Void> followProfile(
 		@PathVariable Long followingId,
 		@AuthProfile AuthProfileDto currentProfile) {
 
-		interactionService.followProfile(currentProfile.profileId(), followingId);
+		followService.followProfile(currentProfile.profileId(), followingId);
 		return new GlobalApiResponse<>(SuccessCode.CREATED.getCode(), SuccessCode.CREATED.getMessage(), null);
 	}
 
@@ -50,7 +32,7 @@ public class InteractionController {
 		@PathVariable Long followingId,
 		@AuthProfile AuthProfileDto currentProfile) {
 
-		interactionService.unFollowProfile(currentProfile.profileId(), followingId);
+		followService.unFollowProfile(currentProfile.profileId(), followingId);
 		return new GlobalApiResponse<>(SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), null);
 	}
 }
