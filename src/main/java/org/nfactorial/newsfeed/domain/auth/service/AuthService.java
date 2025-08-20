@@ -9,6 +9,8 @@ import org.nfactorial.newsfeed.domain.auth.dto.SignUpCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpResult;
 import org.nfactorial.newsfeed.domain.auth.entity.Account;
 import org.nfactorial.newsfeed.domain.auth.repository.AccountRepository;
+import org.nfactorial.newsfeed.domain.profile.dto.request.CreateProfileCommand;
+import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthService {
 	private final AccountRepository accountRepository;
 	private final PasswordEncoder passwordencoder;
-	private final AuthProfileServiceApi profileService;
+	private final ProfileServiceApi profileService;
 	private final JwtUtil jwtUtil;
 
 	@Transactional
@@ -43,8 +45,8 @@ public class AuthService {
 		String encodedPassword = passwordencoder.encode(signUpCommand.password());
 		Account newAccount = Account.signUp(signUpCommand.email(), encodedPassword);
 		Account savedAccount = accountRepository.save(newAccount);
-		AuthProfileServiceApi.CreateProfileCommand createProfileCommand = AuthProfileServiceApi.CreateProfileCommand.builder()
-			.accountId(savedAccount.getId())
+		CreateProfileCommand createProfileCommand = CreateProfileCommand.builder()
+			.account(savedAccount)
 			.nickname(signUpCommand.nickname())
 			.mbti(signUpCommand.mbti())
 			.introduce(signUpCommand.introduce())
@@ -58,6 +60,7 @@ public class AuthService {
 			.build();
 	}
 
+	@Transactional(readOnly = true)
 	public String login(LoginCommand loginCommand) {
 		Account account = accountRepository.findByEmail(loginCommand.email())
 			.orElseThrow(() -> new BusinessException(ErrorCode.LOGIN_FAILED));
