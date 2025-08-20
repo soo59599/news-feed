@@ -11,6 +11,7 @@ import org.nfactorial.newsfeed.domain.post.service.PostServiceApi;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +28,7 @@ public class CommentService implements CommentServiceApi {
 		return comments.size();
 	}
 
+	@Transactional
 	public WriteCommentResult writeComment(WriteCommentCommand command) {
 		Post post = postService.getPostById(command.postId());
 		Profile profile = profileService.getProfileById(command.profileId());
