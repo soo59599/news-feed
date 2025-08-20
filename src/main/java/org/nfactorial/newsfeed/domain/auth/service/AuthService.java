@@ -67,4 +67,10 @@ public class AuthService {
 		}
 		return jwtUtil.createToken(account.getId());
 	}
+
+	@Transactional(readOnly = true)
+	public Account getAccountById(long accountId) {
+		return accountRepository.findById(accountId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+	}
 }

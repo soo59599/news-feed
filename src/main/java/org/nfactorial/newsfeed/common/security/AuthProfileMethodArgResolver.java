@@ -2,7 +2,8 @@ package org.nfactorial.newsfeed.common.security;
 
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
-import org.nfactorial.newsfeed.common.security.mock.SecurityMockProfile;
+import org.nfactorial.newsfeed.domain.auth.entity.Account;
+import org.nfactorial.newsfeed.domain.auth.service.AuthService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -16,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class AuthProfileMethodArgResolver implements HandlerMethodArgumentResolver {
-	private final GetProfileFromAccountIdApi getProfileFromAccountIdApi;
+	private final AuthService authService;
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -28,8 +29,8 @@ public class AuthProfileMethodArgResolver implements HandlerMethodArgumentResolv
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 		final var request = (HttpServletRequest)webRequest.getNativeRequest();
 		long accountId = getAccountId(request);
-		SecurityMockProfile profile = getProfileFromAccountIdApi.execute(accountId);
-		return profile;
+		Account account = authService.getAccountById(accountId);
+		return new AuthProfileDto(accountId, account.getProfiledId());
 	}
 
 	private long getAccountId(HttpServletRequest request) {
