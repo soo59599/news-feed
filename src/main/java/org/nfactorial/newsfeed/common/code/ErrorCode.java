@@ -20,7 +20,10 @@ public enum ErrorCode implements GlobalResponseCode {
 	PROFILE_NOT_FOUND("PROFILE-404", "프로필을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
 	// Interaction
-	LIKE_ALREADY_EXISTS("INTR-409", "이미 좋아요를 누른 게시물입니다.", HttpStatus.CONFLICT);
+	LIKE_ALREADY_EXISTS("INTR-409", "이미 좋아요를 누른 게시물입니다.", HttpStatus.CONFLICT),
+
+	// Comment
+	COMMENT_NOT_FOUND("COMMENT-404", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
 	private final String code;
 	private final String message;

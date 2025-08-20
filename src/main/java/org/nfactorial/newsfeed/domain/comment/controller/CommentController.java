@@ -9,6 +9,7 @@ import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentRequest;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResponse;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResult;
 import org.nfactorial.newsfeed.domain.comment.service.CommentService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,5 +33,11 @@ public class CommentController {
 		WriteCommentResult result = commentService.writeComment(command);
 		WriteCommentResponse response = WriteCommentResponse.of(result);
 		return GlobalApiResponse.of(SuccessCode.OK, response);
+	}
+
+	@DeleteMapping("/comments/{commentId}")
+	public GlobalApiResponse<?> deleteComment(@PathVariable("commentId") long commentId) {
+		commentService.deleteById(commentId);
+		return GlobalApiResponse.of(SuccessCode.OK, null);
 	}
 }

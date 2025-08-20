@@ -2,6 +2,8 @@ package org.nfactorial.newsfeed.domain.comment.service;
 
 import java.util.List;
 
+import org.nfactorial.newsfeed.common.code.ErrorCode;
+import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentCommand;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResult;
 import org.nfactorial.newsfeed.domain.comment.entity.Comment;
@@ -39,5 +41,12 @@ public class CommentService implements CommentServiceApi {
 			.createdAt(savedComment.getCreatedAt())
 			.content(savedComment.getContent())
 			.build();
+	}
+
+	@Transactional
+	public void deleteById(long commentId) {
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+		commentRepository.delete(comment);
 	}
 }
