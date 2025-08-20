@@ -2,8 +2,6 @@ package org.nfactorial.newsfeed.domain.post.entity;
 
 import org.nfactorial.newsfeed.common.entity.BaseTimeEntity;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
-import org.nfactorial.newsfeed.domain.post.dto.request.PostUpdateRequest;
-import org.nfactorial.newsfeed.domain.post.mock.MockAuthProfileDto;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 
 import jakarta.persistence.Column;

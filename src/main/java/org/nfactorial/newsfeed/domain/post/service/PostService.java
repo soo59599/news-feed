@@ -1,8 +1,15 @@
 package org.nfactorial.newsfeed.domain.post.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
+import org.nfactorial.newsfeed.domain.comment.service.CommentServiceApi;
+import org.nfactorial.newsfeed.domain.post.dto.PostCountDto;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostUpdateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostCreateResponse;
@@ -11,7 +18,7 @@ import org.nfactorial.newsfeed.domain.post.dto.response.PostUpdateResponse;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
 import org.nfactorial.newsfeed.domain.post.repository.PostRepository;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
-import org.nfactorial.newsfeed.domain.profile.repository.ProfileRepository;
+import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -23,13 +30,13 @@ import lombok.RequiredArgsConstructor;
 public class PostService implements PostServiceApi {
 
 	private final PostRepository postRepository;
-	private final ProfileRepository profileRepository;
+	private final CommentServiceApi commentService;
+	private final ProfileServiceApi profileService;
 
 	@Transactional
 	public PostCreateResponse save(PostCreateRequest request, AuthProfileDto currentUserProfile) {
 		long profileId = currentUserProfile.profileId();
-		Profile foundProfile = profileRepository.findById(profileId)
-			.orElseThrow(() -> new BusinessException(ErrorCode.PROFILE_NOT_FOUND));
+		Profile foundProfile = profileService.getProfileById(profileId);
 
 		Post savedPost = postRepository.save(Post.of(request, foundProfile));
 
@@ -56,8 +63,7 @@ public class PostService implements PostServiceApi {
 
 		Post foundPost = getPostById(postId);
 
-		//TODO comment 받고 변경
-		int commentCount = 0;
+		int commentCount = commentService.getCommentCount(foundPost);
 
 		return PostGetOneResponse.of(foundPost, commentCount);
 	}
@@ -76,10 +82,33 @@ public class PostService implements PostServiceApi {
 
 	// 포스트 찾기
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public Post getPostById(long postId) {
 		return postRepository.findById(postId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 	}
 
+	@Transactional(readOnly = true)
+	public Map<Long, Long> countPostsByProfile(List<Profile> profiles) {
+		if (profiles == null || profiles.isEmpty()) {
+			return new HashMap<>();
+		}
+
+		// 1. DTO로 카운트 조회
+		List<PostCountDto> postCounts = postRepository.countPostsByProfile(profiles);
+
+		// 2. DTO를 Map으로 변환
+		Map<Long, Long> countMap = postCounts.stream()
+			.collect(Collectors.toMap(
+				PostCountDto::profileId,
+				PostCountDto::postCount
+			));
+
+		// 3. 포스트가 없는 프로필들도 0으로 포함
+		return profiles.stream()
+			.collect(Collectors.toMap(
+				Profile::getId,
+				profile -> countMap.getOrDefault(profile.getId(), 0L)
+			));
+	}
 }
