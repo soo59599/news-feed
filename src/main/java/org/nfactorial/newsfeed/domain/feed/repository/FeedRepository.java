@@ -3,6 +3,7 @@ package org.nfactorial.newsfeed.domain.feed.repository;
 import java.util.List;
 
 import org.nfactorial.newsfeed.domain.feed.dto.response.FeedAccountPostProjection;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedFollowPostProjection;
 import org.nfactorial.newsfeed.domain.feed.dto.response.FeedResponseProjection;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,4 +50,24 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 		 	WHERE p.profile_id = :profile_id;
 		""", nativeQuery = true)
 	Long countAccountPostAll(@Param("profile_id") Long profileId);
+
+	@Query(value = """
+			SELECT p.content, p.like_count, p.created_at, f.nickname, 
+			COALESCE(COUNT(c.id), 0) AS commentCount FROM post p
+		 	INNER JOIN profile f ON f.id = p.profile_id
+		 	INNER JOIN follow fw ON fw.following_id = f.id
+		 	LEFT JOIN comment c ON c.post_id = p.id
+		 	WHERE fw.follower_id = :follower_id
+			GROUP BY p.id, p.content, p.like_count, p.created_at, f.nickname
+		 	ORDER BY p.created_at DESC;
+		""", nativeQuery = true)
+	List<FeedFollowPostProjection> findFollowPostAll(@Param("follower_id") Long followerId);
+
+	@Query(value = """
+			SELECT COUNT(*) FROM post p
+		 	INNER JOIN profile f ON f.id = p.profile_id
+		  	INNER JOIN follow fw ON fw.following_id = f.id
+		  	WHERE fw.follower_id = :follower_id;
+		""", nativeQuery = true)
+	Long countFollowPostAll(@Param("follower_id") Long followerId);
 }

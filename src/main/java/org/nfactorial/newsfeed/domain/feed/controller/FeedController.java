@@ -5,6 +5,7 @@ import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.common.security.AuthProfile;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.domain.feed.dto.request.FeedPageRequest;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedFollowPostResponse;
 import org.nfactorial.newsfeed.domain.feed.dto.response.FeedResponse;
 import org.nfactorial.newsfeed.domain.feed.dto.response.FeedSpecificAccountResponse;
 import org.nfactorial.newsfeed.domain.feed.dto.response.PageResponseDto;
@@ -40,5 +41,16 @@ public class FeedController {
 		FeedSpecificAccountResponse accountPostAll = feedService.findAccountPostAll(profileId, feedPageRequest);
 
 		return GlobalApiResponse.of(SuccessCode.OK, accountPostAll);
+	}
+
+	@GetMapping("/feeds/following")
+	public GlobalApiResponse<PageResponseDto<FeedFollowPostResponse>> findFollowPostAll(
+		@AuthProfile AuthProfileDto authProfileDto,
+		@Valid FeedPageRequest feedPageRequest) {
+
+		PageResponseDto<FeedFollowPostResponse> followPostAll = feedService.findFollowPostAll(
+			authProfileDto.profileId(), feedPageRequest);
+
+		return GlobalApiResponse.of(SuccessCode.OK, followPostAll);
 	}
 }
