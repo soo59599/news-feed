@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
+import org.nfactorial.newsfeed.domain.post.service.PostService;
 import org.nfactorial.newsfeed.domain.profile.dto.request.CreateProfileCommand;
+import org.nfactorial.newsfeed.domain.profile.dto.response.ProfileResponse;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import org.nfactorial.newsfeed.domain.profile.repository.ProfileRepository;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService implements ProfileServiceApi {
 
 	private final ProfileRepository profileRepository;
+	private final PostService postService;
 
 	@Override
 	public boolean isNicknameDuplicated(String nickname) {
@@ -42,5 +45,12 @@ public class ProfileService implements ProfileServiceApi {
 			.orElseThrow(() -> new BusinessException(ErrorCode.PROFILE_NOT_FOUND));
 
 		profile.softDelete();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Profile getProfileById(long profileId) {
+		return profileRepository.findById(profileId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.PROFILE_NOT_FOUND));
 	}
 }

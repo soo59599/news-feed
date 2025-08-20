@@ -10,6 +10,5 @@ public interface ProfileServiceApi {
 
 	void deleteFromAccountId(long accountId);
 
-	// TODO 구현해주세요
-	Profile getProfileById(long profiledId);
+	Profile getProfileById(long profileId);
 }

@@ -10,6 +10,7 @@ import org.nfactorial.newsfeed.domain.post.dto.response.PostUpdateResponse;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
 import org.nfactorial.newsfeed.domain.post.mock.MockAuthProfileDto;
 import org.nfactorial.newsfeed.domain.post.repository.PostRepository;
+import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,6 @@ public class PostService implements PostServiceApi {
 	public PostCreateResponse save(PostCreateRequest request, MockAuthProfileDto currentUserProfile) {
 
 		Post savedPost = postRepository.save(Post.of(request, currentUserProfile));
-
 		return PostCreateResponse.of(savedPost);
 	}
 
@@ -76,5 +76,4 @@ public class PostService implements PostServiceApi {
 		return postRepository.findById(postId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 	}
-
 }
