@@ -23,7 +23,8 @@ public enum ErrorCode implements GlobalResponseCode {
 	LIKE_ALREADY_EXISTS("INTR-409", "이미 좋아요를 누른 게시물입니다.", HttpStatus.CONFLICT),
 
 	// Comment
-	COMMENT_NOT_FOUND("COMMENT-404", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+	COMMENT_NOT_FOUND("COMMENT-404", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+	COMMENT_NOT_YOURS("COMMENT-403", "본인의 댓글이 아닙니다.", HttpStatus.FORBIDDEN);
 
 	private final String code;
 	private final String message;

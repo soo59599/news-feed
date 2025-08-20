@@ -36,8 +36,9 @@ public class CommentController {
 	}
 
 	@DeleteMapping("/comments/{commentId}")
-	public GlobalApiResponse<?> deleteComment(@PathVariable("commentId") long commentId) {
-		commentService.deleteById(commentId);
+	public GlobalApiResponse<?> deleteComment(@PathVariable("commentId") long commentId,
+		@AuthProfile AuthProfileDto authProfile) {
+		commentService.deleteById(commentId, authProfile.profileId());
 		return GlobalApiResponse.of(SuccessCode.OK, null);
 	}
 }

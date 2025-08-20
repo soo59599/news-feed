@@ -44,9 +44,12 @@ public class CommentService implements CommentServiceApi {
 	}
 
 	@Transactional
-	public void deleteById(long commentId) {
+	public void deleteById(long commentId, long profileId) {
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+		if (comment.getProfile().getId() != profileId) {
+			throw new BusinessException(ErrorCode.COMMENT_NOT_YOURS);
+		}
 		commentRepository.delete(comment);
 	}
 }
