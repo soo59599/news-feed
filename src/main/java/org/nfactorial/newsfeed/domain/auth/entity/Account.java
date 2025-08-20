@@ -49,4 +49,8 @@ public class Account extends BaseTimeEntity {
 	public void setDeleted() {
 		deletedAt = LocalDateTime.now();
 	}
+
+	public void changePassword(String password) {
+		this.password = password;
+	}
 }

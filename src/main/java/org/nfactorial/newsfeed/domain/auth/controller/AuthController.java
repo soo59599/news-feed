@@ -8,6 +8,8 @@ import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.common.security.AuthProfile;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
+import org.nfactorial.newsfeed.domain.auth.dto.ChangePasswordCommand;
+import org.nfactorial.newsfeed.domain.auth.dto.ChangePasswordRequest;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginRequest;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginResponse;
@@ -18,6 +20,7 @@ import org.nfactorial.newsfeed.domain.auth.dto.SignUpResult;
 import org.nfactorial.newsfeed.domain.auth.dto.WithdrawRequest;
 import org.nfactorial.newsfeed.domain.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,6 +65,14 @@ public class AuthController {
 		Optional<String> token = getHeader(httpServletRequest)
 			.flatMap(this::getBearerToken);
 		authService.logout(token);
+		return GlobalApiResponse.of(SuccessCode.OK, null);
+	}
+
+	@PatchMapping("/me/password")
+	public GlobalApiResponse<?> changePassword(@AuthProfile AuthProfileDto authProfile,
+		@Valid @RequestBody ChangePasswordRequest request) {
+		ChangePasswordCommand command = ChangePasswordCommand.of(authProfile, request);
+		authService.changePassword(command);
 		return GlobalApiResponse.of(SuccessCode.OK, null);
 	}
 

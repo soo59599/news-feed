@@ -8,6 +8,7 @@ import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.common.security.JwtUtil;
 import org.nfactorial.newsfeed.common.security.TokenBlacklist;
 import org.nfactorial.newsfeed.domain.auth.component.PasswordEncoder;
+import org.nfactorial.newsfeed.domain.auth.dto.ChangePasswordCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.LoginCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpCommand;
 import org.nfactorial.newsfeed.domain.auth.dto.SignUpResult;
@@ -94,5 +95,18 @@ public class AuthService {
 	public void logout(Optional<String> token) {
 		String tokenStr = token.orElseThrow(() -> new BusinessException(ErrorCode.INVALID_TOKEN));
 		tokenBlacklist.addToken(tokenStr);
+	}
+
+	@Transactional
+	public void changePassword(ChangePasswordCommand command) {
+		Account account = accountRepository.findById(command.accountId())
+			.orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+		if (passwordencoder.matches(command.currentPassword(), account.getPassword()) == false) {
+			throw new BusinessException(ErrorCode.PASSWORD_DOESNT_MATCH);
+		}
+
+		String encodedPassword = passwordencoder.encode(command.currentPassword());
+		account.changePassword(encodedPassword);
 	}
 }
