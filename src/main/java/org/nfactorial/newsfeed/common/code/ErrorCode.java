@@ -21,9 +21,10 @@ public enum ErrorCode implements GlobalResponseCode {
 
 	// Interaction
 	LIKE_ALREADY_EXISTS("INTR-409-1", "이미 좋아요를 누른 게시물입니다.", HttpStatus.CONFLICT),
-	LIKE_NOT_FOUND("INTR-404", "게시글에 대한 좋아요 기록을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+	LIKE_NOT_FOUND("INTR-404-1", "게시글에 대한 좋아요 기록을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 	CANNOT_FOLLOW_SELF("INTR-400", "자기 자신을 팔로우할 수 없습니다.", HttpStatus.BAD_REQUEST),
 	FOLLOWING_ALREADY_EXISTS("INTR-409-2", "이미 팔로우한 사용자입니다.", HttpStatus.CONFLICT),
+	FOLLOWING_NOT_FOUND("INTR-404-2", "팔로우한 기록을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
 	// Comment
 	COMMENT_NOT_FOUND("COMMENT-404", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),

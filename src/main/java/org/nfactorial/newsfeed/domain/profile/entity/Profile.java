@@ -41,4 +41,10 @@ public class Profile {
 	public void incrementFollowCount() {
 		this.followCount++;
 	}
+
+	public void decrementFollowCount() {
+		if (this.followCount > 0) {
+			this.followCount--;
+		}
+	}
 }

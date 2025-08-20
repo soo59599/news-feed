@@ -68,4 +68,17 @@ public class InteractionService {
 		followRepository.save(Follow.of(follower, following));
 		follower.incrementFollowCount();
 	}
+
+	@Transactional
+	public void unFollowProfile(long followerId, Long followingId) {
+
+		Profile follower = profileService.getProfileById(followerId);
+		Profile following = profileService.getProfileById(followingId);
+
+		Follow savedFollow = followRepository.findByFollowerAndFollowing(follower, following)
+			.orElseThrow(() -> new BusinessException(ErrorCode.FOLLOWING_NOT_FOUND));
+
+		followRepository.delete(savedFollow);
+		follower.decrementFollowCount();
+	}
 }

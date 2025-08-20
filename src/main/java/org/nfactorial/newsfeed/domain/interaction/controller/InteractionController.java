@@ -44,4 +44,13 @@ public class InteractionController {
 		interactionService.followProfile(currentProfile.profileId(), followingId);
 		return new GlobalApiResponse<>(SuccessCode.CREATED.getCode(), SuccessCode.CREATED.getMessage(), null);
 	}
+
+	@DeleteMapping("/api/v1/profiles/{followingId}/follows")
+	public GlobalApiResponse<Void> unFollowProfile(
+		@PathVariable Long followingId,
+		@AuthProfile AuthProfileDto currentProfile) {
+
+		interactionService.unFollowProfile(currentProfile.profileId(), followingId);
+		return new GlobalApiResponse<>(SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), null);
+	}
 }
