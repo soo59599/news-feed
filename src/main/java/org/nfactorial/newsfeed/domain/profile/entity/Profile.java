@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.nfactorial.newsfeed.domain.auth.entity.Account;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -18,9 +17,6 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Account account;
-
     @Column(nullable = false, unique = true)
     private String nickname;
 
@@ -32,8 +28,7 @@ public class Profile {
 
     private LocalDateTime deletedAt;
 
-    public Profile(Account account, String nickname, String mbti, String introduce) {
-        this.account = account;
+    public Profile(String nickname, String mbti, String introduce) {
         this.nickname = nickname;
         this.mbti = mbti;
         this.introduce = introduce;
