@@ -14,6 +14,8 @@ public enum ErrorCode implements GlobalResponseCode {
 	INVALID_TOKEN("AUTH-400", "유효하지 않은 토큰입니다.", HttpStatus.BAD_REQUEST),
 	LOGIN_FAILED("AUTH-401-1", "로그인에 실패하였습니다.", HttpStatus.UNAUTHORIZED),
 	ACCOUNT_NOT_FOUND("AUTH-404", "계정을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+	POST_NOT_FOUND("POST-404", "해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+	POST_ACCESS_DENIED("POST-403", "게시글에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
 	PASSWORD_DOESNT_MATCH("AUTH-401-2", "비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
 
 	private final String code;

@@ -8,7 +8,7 @@ import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import lombok.Builder;
 
 @Builder
-public record PostCreateResponse(
+public record PostUpdateResponse(
 	Long postId,
 	Long profileId,
 	String nickname,
@@ -18,10 +18,10 @@ public record PostCreateResponse(
 	LocalDateTime modifiedAt
 ) {
 
-	public static PostCreateResponse of(Post post) {
+	public static PostUpdateResponse of(Post post) {
 		Profile profile = post.getProfile();
 
-		return PostCreateResponse.builder()
+		return PostUpdateResponse.builder()
 			.postId(post.getId())
 			.profileId(profile.getId())
 			.nickname(profile.getNickname())

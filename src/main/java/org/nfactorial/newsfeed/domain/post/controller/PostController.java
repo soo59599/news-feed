@@ -3,10 +3,14 @@ package org.nfactorial.newsfeed.domain.post.controller;
 import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
+import org.nfactorial.newsfeed.domain.post.dto.request.PostUpdateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostCreateResponse;
+import org.nfactorial.newsfeed.domain.post.dto.response.PostUpdateResponse;
 import org.nfactorial.newsfeed.domain.post.mock.MockAuthProfileDto;
 import org.nfactorial.newsfeed.domain.post.service.PostService;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,13 +34,22 @@ public class PostController {
 
 		//TODO 프로필 받고 변경하기!
 		MockAuthProfileDto currentUserProfile = new MockAuthProfileDto(1L, "이름");
-		PostCreateResponse response = postService.createPost(request, currentUserProfile);
+		PostCreateResponse response = postService.save(request, currentUserProfile);
 
-		return GlobalApiResponse.<PostCreateResponse>builder()
-			.code(SuccessCode.CREATED.getCode())
-			.message(SuccessCode.CREATED.getMessage())
-			.data(response)
-			.build();
+		return GlobalApiResponse.of(SuccessCode.CREATED, response);
+	}
+
+	@PatchMapping("/{postId}")
+	@ResponseStatus(HttpStatus.OK)
+	// public GlobalApiResponse<PostCreateResponse> createPost(@AuthProfile AuthProfileDto currentUserProfile, @Valid @RequestBody PostCreateRequest request){
+	public GlobalApiResponse<PostUpdateResponse> update(@PathVariable Long postId,
+		@Valid @RequestBody PostUpdateRequest request) {
+
+		//TODO 프로필 받고 변경하기!
+		MockAuthProfileDto currentUserProfile = new MockAuthProfileDto(1L, "이름");
+		PostUpdateResponse response = postService.update(postId, request, currentUserProfile);
+
+		return GlobalApiResponse.of(SuccessCode.OK, response);
 	}
 
 }
