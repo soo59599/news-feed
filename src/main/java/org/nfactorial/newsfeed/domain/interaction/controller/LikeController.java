@@ -24,7 +24,7 @@ public class LikeController {
 		@AuthProfile AuthProfileDto currentProfile) {
 
 		likeService.addLike(postId, currentProfile.profileId());
-		return new GlobalApiResponse<>(SuccessCode.CREATED.getCode(), SuccessCode.CREATED.getMessage(), null);
+		return GlobalApiResponse.of(SuccessCode.CREATED, null);
 	}
 
 	@DeleteMapping("/api/v1/posts/{postId}/likes")
@@ -33,8 +33,6 @@ public class LikeController {
 		@AuthProfile AuthProfileDto currentProfile) {
 
 		likeService.cancelLike(postId, currentProfile.profileId());
-		return new GlobalApiResponse<>(SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), null);
+		return GlobalApiResponse.of(SuccessCode.OK, null);
 	}
-
-
 }

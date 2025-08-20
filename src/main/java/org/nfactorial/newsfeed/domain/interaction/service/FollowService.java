@@ -9,7 +9,7 @@ import org.nfactorial.newsfeed.domain.interaction.entity.Follow;
 import org.nfactorial.newsfeed.domain.interaction.repository.FollowRepository;
 import org.nfactorial.newsfeed.domain.profile.dto.ProfileSummaryDto;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
-import org.nfactorial.newsfeed.domain.profile.service.ProfileService;
+import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class FollowService {
 
 	private final FollowRepository followRepository;
-	private final ProfileService profileService;
+	private final ProfileServiceApi profileService;
 
 	@Transactional
 	public void followProfile(Long followerId, Long followingId) {

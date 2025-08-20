@@ -30,7 +30,7 @@ public class FollowController {
 		@AuthProfile AuthProfileDto currentProfile) {
 
 		followService.followProfile(currentProfile.profileId(), followingId);
-		return new GlobalApiResponse<>(SuccessCode.CREATED.getCode(), SuccessCode.CREATED.getMessage(), null);
+		return GlobalApiResponse.of(SuccessCode.CREATED, null);
 	}
 
 	@DeleteMapping("/api/v1/profiles/{followingId}/follows")
@@ -39,7 +39,7 @@ public class FollowController {
 		@AuthProfile AuthProfileDto currentProfile) {
 
 		followService.unFollowProfile(currentProfile.profileId(), followingId);
-		return new GlobalApiResponse<>(SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), null);
+		return GlobalApiResponse.of(SuccessCode.OK, null);
 	}
 
 	@GetMapping("/api/v1/profiles/{followingId}/followed")
@@ -47,12 +47,9 @@ public class FollowController {
 		@PathVariable Long followingId,
 		@AuthProfile AuthProfileDto currentProfile
 	) {
-		FollowStatusResponse responseDto = followService.checkFollowStatus(
-			currentProfile.profileId(),
-			followingId
-		);
-
-		return new GlobalApiResponse<>(SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), responseDto);
+		
+		FollowStatusResponse responseDto = followService.checkFollowStatus(currentProfile.profileId(), followingId);
+		return GlobalApiResponse.of(SuccessCode.OK, responseDto);
 	}
 
 	@GetMapping("/api/v1/profiles/{followerId}/followings")

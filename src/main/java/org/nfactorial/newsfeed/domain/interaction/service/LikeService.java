@@ -5,9 +5,9 @@ import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.domain.interaction.entity.Like;
 import org.nfactorial.newsfeed.domain.interaction.repository.LikeRepository;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
-import org.nfactorial.newsfeed.domain.post.service.PostService;
+import org.nfactorial.newsfeed.domain.post.service.PostServiceApi;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
-import org.nfactorial.newsfeed.domain.profile.service.ProfileService;
+import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 public class LikeService {
 
 	private final LikeRepository likeRepository;
-	private final PostService postService;
-	private final ProfileService profileService;
+	private final PostServiceApi postService;
+	private final ProfileServiceApi profileService;
 
 	@Transactional
 	public void addLike(Long postId, Long profileId) {
