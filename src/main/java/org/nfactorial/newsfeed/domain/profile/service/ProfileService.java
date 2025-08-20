@@ -2,6 +2,8 @@ package org.nfactorial.newsfeed.domain.profile.service;
 
 import lombok.RequiredArgsConstructor;
 
+import org.nfactorial.newsfeed.common.code.ErrorCode;
+import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.domain.profile.dto.request.CreateProfileCommand;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import org.nfactorial.newsfeed.domain.profile.repository.ProfileRepository;
@@ -31,5 +33,14 @@ public class ProfileService implements ProfileServiceApi {
 
 		Profile savedProfile = profileRepository.save(newProfile);
 		return savedProfile.getId();
+	}
+
+	@Override
+	@Transactional
+	public void deleteFromAccountId(long accountId) {
+		Profile profile = profileRepository.findById(accountId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.PROFILE_NOT_FOUND));
+
+		profile.softDelete();
 	}
 }

@@ -7,6 +7,5 @@ public interface ProfileServiceApi {
 
 	long createProfile(CreateProfileCommand createProfileCommand);
 
-	// TODO 구현해주십셔!
 	void deleteFromAccountId(long accountId);
 }

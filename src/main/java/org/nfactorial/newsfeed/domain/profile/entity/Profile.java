@@ -33,4 +33,8 @@ public class Profile {
         this.mbti = mbti;
         this.introduce = introduce;
     }
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }
