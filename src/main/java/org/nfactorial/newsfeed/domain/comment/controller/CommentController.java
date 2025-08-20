@@ -4,12 +4,15 @@ import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.common.security.AuthProfile;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
+import org.nfactorial.newsfeed.domain.comment.dto.UpdateCommentRequest;
+import org.nfactorial.newsfeed.domain.comment.dto.UpdateCommentResponse;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentCommand;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentRequest;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResponse;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResult;
 import org.nfactorial.newsfeed.domain.comment.service.CommentService;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,5 +43,13 @@ public class CommentController {
 		@AuthProfile AuthProfileDto authProfile) {
 		commentService.deleteById(commentId, authProfile.profileId());
 		return GlobalApiResponse.of(SuccessCode.OK, null);
+	}
+
+	@PatchMapping("/comments/{commentId}")
+	public GlobalApiResponse<?> updateComment(@PathVariable("commentId") long commentId,
+		@AuthProfile AuthProfileDto authProfile,
+		@Valid @RequestBody UpdateCommentRequest request) {
+		String updatedContent = commentService.updateById(commentId, request.content(), authProfile.profileId());
+		return GlobalApiResponse.of(SuccessCode.OK, new UpdateCommentResponse(commentId, updatedContent));
 	}
 }

@@ -40,4 +40,8 @@ public class Comment extends BaseTimeEntity {
 	public static Comment write(Post post, Profile profile, String content) {
 		return new Comment(null, post, profile, content);
 	}
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
 }
