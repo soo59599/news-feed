@@ -1,10 +1,13 @@
 package org.nfactorial.newsfeed.domain.interaction.service;
 
+import java.util.List;
+
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.domain.interaction.dto.response.FollowStatusResponse;
 import org.nfactorial.newsfeed.domain.interaction.entity.Follow;
 import org.nfactorial.newsfeed.domain.interaction.repository.FollowRepository;
+import org.nfactorial.newsfeed.domain.profile.dto.ProfileSummaryDto;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import org.nfactorial.newsfeed.domain.profile.service.ProfileService;
 import org.springframework.stereotype.Service;
@@ -62,5 +65,12 @@ public class FollowService {
 		Profile following = profileService.getProfileById(followingId);
 
 		return FollowStatusResponse.of(followRepository.existsByFollowerAndFollowing(follower, following));
+	}
+
+	@Transactional(readOnly = true)
+	public List<ProfileSummaryDto> getFollowingProfiles(Long followerId) {
+
+		List<Long> followingIds = followRepository.findFollowingIdsByFollowerId(followerId);
+		return profileService.findProfileSummariesByIds(followingIds);
 	}
 }

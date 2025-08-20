@@ -1,11 +1,15 @@
 package org.nfactorial.newsfeed.domain.interaction.controller;
 
+import java.util.List;
+
 import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.common.security.AuthProfile;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.domain.interaction.dto.response.FollowStatusResponse;
 import org.nfactorial.newsfeed.domain.interaction.service.FollowService;
+import org.nfactorial.newsfeed.domain.profile.dto.ProfileSummaryDto;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,5 +53,21 @@ public class FollowController {
 		);
 
 		return new GlobalApiResponse<>(SuccessCode.OK.getCode(), SuccessCode.OK.getMessage(), responseDto);
+	}
+
+	@GetMapping("/api/v1/profiles/{followerId}/followings")
+	public GlobalApiResponse<Slice<ProfileSummaryDto>> getFollowingProfiles(
+		@PathVariable Long followerId) {
+
+		List<ProfileSummaryDto> responseDto = followService.getFollowingProfiles(followerId);
+		return GlobalApiResponse.of(SuccessCode.OK, responseDto);
+	}
+
+	@GetMapping("/api/v1/profiles/me/followings")
+	public GlobalApiResponse<Slice<ProfileSummaryDto>> getMyFollowingProfiles(
+		@AuthProfile AuthProfileDto currentProfile) {
+
+		List<ProfileSummaryDto> responseDto = followService.getFollowingProfiles(currentProfile.profileId());
+		return GlobalApiResponse.of(SuccessCode.OK, responseDto);
 	}
 }
