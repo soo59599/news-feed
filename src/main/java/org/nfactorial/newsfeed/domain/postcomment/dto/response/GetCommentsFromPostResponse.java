@@ -13,7 +13,7 @@ public record GetCommentsFromPostResponse(
 		return new GetCommentsFromPostResponse(commentList);
 	}
 
-	record SimpleComment(
+	public record SimpleComment(
 		long id,
 		String nickname,
 		String content) {
