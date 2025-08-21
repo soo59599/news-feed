@@ -6,7 +6,7 @@ public interface FeedFollowPostProjection {
 
 	String getNickname();
 
-	String getContents();
+	String getContent();
 
 	int getLikeCount();
 

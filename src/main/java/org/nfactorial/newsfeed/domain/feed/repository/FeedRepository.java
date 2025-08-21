@@ -66,9 +66,10 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 		 	LEFT JOIN comment c ON c.post_id = p.id
 		 	WHERE fw.follower_id = :follower_id
 			GROUP BY p.id
-		 	ORDER BY p.created_at DESC;
+		 	LIMIT :size OFFSET :offset;
 		""", nativeQuery = true)
-	List<FeedFollowPostProjection> findFollowPostAll(@Param("follower_id") Long followerId);
+	List<FeedFollowPostProjection> findFollowPostAll(@Param("offset") long offset, @Param("size") long size,
+		@Param("follower_id") Long followerId);
 
 	@Query(value = """
 			SELECT COUNT(*) FROM post p

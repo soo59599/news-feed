@@ -85,9 +85,9 @@ public class FeedService {
 
 		Profile profile = profileServiceApi.getProfileEntityById(followerId);
 
-		List<FeedFollowPostResponse> followerPost = feedRepository.findFollowPostAll(profile.getId())
+		List<FeedFollowPostResponse> followerPost = feedRepository.findFollowPostAll(offset, limit, profile.getId())
 			.stream().map(follow -> FeedFollowPostResponse.of(
-				follow.getNickname(), follow.getContents(), follow.getLikeCount(),
+				follow.getNickname(), follow.getContent(), follow.getLikeCount(),
 				follow.getCommentCount(), follow.getCreatedAt(), follow.getViewCount()
 			)).collect(Collectors.toList());
 
