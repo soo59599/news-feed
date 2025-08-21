@@ -14,7 +14,7 @@ import org.nfactorial.newsfeed.domain.feed.dto.response.FeedSpecificResponse;
 import org.nfactorial.newsfeed.domain.feed.dto.response.PageResponseDto;
 import org.nfactorial.newsfeed.domain.feed.repository.FeedRepository;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
-import org.nfactorial.newsfeed.domain.profile.service.ProfileService;
+import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class FeedService {
 
 	private final FeedRepository feedRepository;
-	private final ProfileService profileService;
+	private final ProfileServiceApi profileServiceApi;
 
 	//피드 전체 조회
 	public PageResponseDto<FeedResponse> findAll(FeedPageRequest feedPageRequest) {
@@ -52,7 +52,7 @@ public class FeedService {
 	public FeedSpecificAccountResponse findAccountPostAll(Long profileId,
 		FeedPageRequest feedPageRequest) {
 
-		Profile profile = profileService.getProfileById(profileId);
+		Profile profile = profileServiceApi.getProfileEntityById(profileId);
 
 		long offset = (feedPageRequest.getPageNumber() - 1) * feedPageRequest.getSize();
 		long limit = feedPageRequest.getSize();
@@ -83,7 +83,7 @@ public class FeedService {
 		long offset = (feedPageRequest.getPageNumber() - 1) * feedPageRequest.getSize();
 		long limit = feedPageRequest.getSize();
 
-		Profile profile = profileService.getProfileById(followerId);
+		Profile profile = profileServiceApi.getProfileEntityById(followerId);
 
 		List<FeedFollowPostResponse> followerPost = feedRepository.findFollowPostAll(profile.getId())
 			.stream().map(follow -> FeedFollowPostResponse.of(

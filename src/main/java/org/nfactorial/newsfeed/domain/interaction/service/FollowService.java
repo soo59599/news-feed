@@ -25,8 +25,8 @@ public class FollowService {
 			throw new BusinessException(ErrorCode.CANNOT_FOLLOW_SELF);
 		}
 
-		Profile follower = profileService.getProfileById(followerId);
-		Profile following = profileService.getProfileById(followingId);
+		Profile follower = profileService.getProfileEntityById(followerId);
+		Profile following = profileService.getProfileEntityById(followingId);
 
 		if (followRepository.existsByFollowerAndFollowing(follower, following)) {
 			throw new BusinessException(ErrorCode.FOLLOWING_ALREADY_EXISTS);
@@ -39,8 +39,8 @@ public class FollowService {
 	@Transactional
 	public void unFollowProfile(Long followerId, Long followingId) {
 
-		Profile follower = profileService.getProfileById(followerId);
-		Profile following = profileService.getProfileById(followingId);
+		Profile follower = profileService.getProfileEntityById(followerId);
+		Profile following = profileService.getProfileEntityById(followingId);
 
 		Follow savedFollow = followRepository.findByFollowerAndFollowing(follower, following)
 			.orElseThrow(() -> new BusinessException(ErrorCode.FOLLOWING_NOT_FOUND));

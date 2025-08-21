@@ -8,11 +8,11 @@ import lombok.RequiredArgsConstructor;
 
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
-import org.nfactorial.newsfeed.domain.post.dto.PostCountDto;
-import org.nfactorial.newsfeed.domain.post.repository.PostRepository;
+import org.nfactorial.newsfeed.domain.post.service.PostServiceApi;
 import org.nfactorial.newsfeed.domain.profile.dto.request.CreateProfileCommand;
 import org.nfactorial.newsfeed.domain.profile.dto.request.UpdateProfileCommand;
 import org.nfactorial.newsfeed.domain.profile.dto.ProfileSummaryDto;
+import org.nfactorial.newsfeed.domain.profile.dto.response.ProfileResponse;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import org.nfactorial.newsfeed.domain.profile.repository.ProfileRepository;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService implements ProfileServiceApi {
 
 	private final ProfileRepository profileRepository;
-	private final PostRepository postRepository;
+	private final PostServiceApi postServiceApi;
 
 	@Override
 	public boolean isNicknameDuplicated(String nickname) {
@@ -55,24 +55,27 @@ public class ProfileService implements ProfileServiceApi {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Profile getProfileById(long profileId) {
-		return profileRepository.findById(profileId)
-			.orElseThrow(() -> new BusinessException(ErrorCode.PROFILE_NOT_FOUND));
+	public ProfileResponse getProfileById(long profileId) {
+		Profile profile = getProfileEntityById(profileId);
+		long postCount = postServiceApi.countPostsByProfileId(profileId);
+		return ProfileResponse.from(profile, postCount);
 	}
 
 	@Override
 	@Transactional
-	public Profile updateProfile(long profileId, UpdateProfileCommand command) {
+	public ProfileResponse updateProfile(long profileId, UpdateProfileCommand command) {
 		Profile profile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.PROFILE_NOT_FOUND));
 
-		if (profileRepository.existsByNickname(command.nickname()) && !profile.getNickname().equals(command.nickname())) {
+		if (profileRepository.existsByNickname(command.nickname()) &&
+			!profile.getNickname().equals(command.nickname())) {
 			throw new BusinessException(ErrorCode.NICKNAME_DUPLICATED);
 		}
 
 		profile.update(command.nickname(), command.mbti(), command.introduce());
 
-		return profile;
+		long postCount = postServiceApi.countPostsByProfileId(profileId);
+		return ProfileResponse.from(profile, postCount);
 	}
 
 	@Override
@@ -81,11 +84,7 @@ public class ProfileService implements ProfileServiceApi {
 		List<Profile> profiles = profileRepository.findAllById(profileIds);
 
 		//모든 프로필의 게시물 수를 두 번의 쿼리(프로필용, 게시물용)
-		Map<Long, Long> postCounts = postRepository.countPostsByProfile(profiles).stream()
-			.collect(Collectors.toMap(
-				PostCountDto::profileId,
-				PostCountDto::postCount
-			));
+		Map<Long, Long> postCounts = postServiceApi.countPostsByProfileIds(profileIds);
 
 		return profiles.stream()
 			.map(profile -> {
@@ -93,5 +92,12 @@ public class ProfileService implements ProfileServiceApi {
 				return ProfileSummaryDto.of(profile, postCount);
 			})
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Profile getProfileEntityById(long profileId) {
+		return profileRepository.findById(profileId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.PROFILE_NOT_FOUND));
 	}
 }

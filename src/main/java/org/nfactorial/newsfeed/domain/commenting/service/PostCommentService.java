@@ -27,7 +27,7 @@ public class PostCommentService {
     @Transactional
     public WriteCommentToPostResult writeCommentToPost(WriteCommentToPostCommand command) {
         Post post = postService.getPostById(command.postId());
-        Profile profile = profileService.getProfileById(command.profileId());
+        Profile profile = profileService.getProfileEntityById(command.profileId());
         Comment savedComment = commentService.writeComment(WriteCommentCommand.of(post, profile, command.content()));
         return WriteCommentToPostResult.builder()
             .id(savedComment.getId())

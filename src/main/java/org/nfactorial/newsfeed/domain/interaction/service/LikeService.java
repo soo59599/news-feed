@@ -24,7 +24,7 @@ public class LikeService {
 	@Transactional
 	public void addLike(Long postId, Long profileId) {
 
-		Profile currentProfile = profileService.getProfileById(profileId);
+		Profile currentProfile = profileService.getProfileEntityById(profileId);
 		Post currentPost = postService.getPostById(postId);
 
 		if (likeRepository.existsByPostIdAndProfileId(postId, profileId)) {
@@ -38,7 +38,7 @@ public class LikeService {
 	@Transactional
 	public void cancelLike(Long postId, Long profileId) {
 
-		Profile savedProfile = profileService.getProfileById(profileId);
+		Profile savedProfile = profileService.getProfileEntityById(profileId);
 		Post savedPost = postService.getPostById(postId);
 
 		Like savedLike = likeRepository.findByPostAndProfile(savedPost, savedProfile)

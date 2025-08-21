@@ -9,6 +9,8 @@ import org.nfactorial.newsfeed.domain.post.dto.request.PostUpdateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostCreateResponse;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostGetOneResponse;
 import org.nfactorial.newsfeed.domain.post.dto.response.PostUpdateResponse;
+import org.nfactorial.newsfeed.domain.post.service.PostCreationService;
+import org.nfactorial.newsfeed.domain.post.service.PostInteractionService;
 import org.nfactorial.newsfeed.domain.post.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,21 +32,28 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 
 	private final PostService postService;
+	private final PostCreationService postCreationService;
+	private final PostInteractionService postInteractionService;
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public GlobalApiResponse<PostCreateResponse> createPost(@AuthProfile AuthProfileDto currentUserProfile,
-		@Valid @RequestBody PostCreateRequest request) {
+	public GlobalApiResponse<PostCreateResponse> createPost(@AuthProfile
+	AuthProfileDto currentUserProfile,
+		@Valid @RequestBody
+		PostCreateRequest request) {
 
-		PostCreateResponse response = postService.save(request, currentUserProfile);
+		PostCreateResponse response = postCreationService.save(request, currentUserProfile);
 
 		return GlobalApiResponse.of(SuccessCode.CREATED, response);
 	}
 
 	@PatchMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
-	public GlobalApiResponse<PostUpdateResponse> update(@PathVariable Long postId,
-		@AuthProfile AuthProfileDto currentUserProfile, @Valid @RequestBody PostUpdateRequest request) {
+	public GlobalApiResponse<PostUpdateResponse> update(@PathVariable
+	Long postId,
+		@AuthProfile
+		AuthProfileDto currentUserProfile, @Valid @RequestBody
+		PostUpdateRequest request) {
 
 		PostUpdateResponse response = postService.update(postId, request, currentUserProfile);
 
@@ -53,17 +62,20 @@ public class PostController {
 
 	@GetMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
-	public GlobalApiResponse<PostGetOneResponse> viewPost(@PathVariable Long postId) {
+	public GlobalApiResponse<PostGetOneResponse> viewPost(@PathVariable
+	Long postId) {
 
-		PostGetOneResponse response = postService.viewPost(postId);
+		PostGetOneResponse response = postInteractionService.viewPost(postId);
 
 		return GlobalApiResponse.of(SuccessCode.OK, response);
 	}
 
 	@DeleteMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
-	public GlobalApiResponse<Void> deleteById(@PathVariable Long postId,
-		@AuthProfile AuthProfileDto currentUserProfile) {
+	public GlobalApiResponse<Void> deleteById(@PathVariable
+	Long postId,
+		@AuthProfile
+		AuthProfileDto currentUserProfile) {
 
 		postService.deleteById(postId, currentUserProfile);
 
