@@ -21,7 +21,7 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 			INNER JOIN profile f ON f.id = p.profile_id
 			LEFT JOIN comment c ON c.post_id = p.id
 			WHERE (:startDate IS NULL OR :endDate IS NULL OR DATE(p.created_at) BETWEEN :startDate AND :endDate)
-			GROUP BY p.id, p.content, p.like_count, p.created_at, f.nickname
+			GROUP BY p.id
 			ORDER BY p.created_at desc
 			LIMIT :size OFFSET :offset;
 		""", nativeQuery = true)
@@ -43,7 +43,7 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 		 	INNER JOIN profile f ON f.id = p.profile_id
 		 	LEFT JOIN comment c ON c.post_id = p.id
 		 	WHERE p.profile_id = :profile_id
-		 	GROUP BY p.id, p.profile_id, p.content, p.like_count, p.created_at, f.nickname, f.mbti, f.introduce, f.follow_count
+		 	GROUP BY p.id
 		 	ORDER BY p.created_at desc
 			LIMIT :size OFFSET :offset;
 		""", nativeQuery = true)
@@ -65,7 +65,7 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 		 	INNER JOIN follow fw ON fw.following_id = f.id
 		 	LEFT JOIN comment c ON c.post_id = p.id
 		 	WHERE fw.follower_id = :follower_id
-			GROUP BY p.id, p.content, p.like_count, p.created_at, f.nickname
+			GROUP BY p.id
 		 	ORDER BY p.created_at DESC;
 		""", nativeQuery = true)
 	List<FeedFollowPostProjection> findFollowPostAll(@Param("follower_id") Long followerId);
