@@ -106,6 +106,10 @@ public class AuthService {
 			throw new BusinessException(ErrorCode.PASSWORD_DOESNT_MATCH);
 		}
 
+		if (passwordencoder.matches(command.changePassword(), account.getPassword())) {
+			throw new BusinessException(ErrorCode.NEW_PASSWORD_SAME_AS_CURRENT);
+		}
+
 		String encodedPassword = passwordencoder.encode(command.changePassword());
 		account.changePassword(encodedPassword);
 	}

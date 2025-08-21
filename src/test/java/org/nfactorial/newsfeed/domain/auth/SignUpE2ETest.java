@@ -26,7 +26,7 @@ class SignUpE2ETest extends AuthE2ETest {
         // given
         SignUpRequest request = new SignUpRequest(
             "test@email.com",
-            "password123!",
+            "Password123!",
             "testuser",
             "안녕하세요",
             "INFP");
@@ -53,7 +53,7 @@ class SignUpE2ETest extends AuthE2ETest {
     void signUp_fail_duplicatedEmail() {
         // given
         // 먼저 사용자를 하나 가입시킴
-        SignUpRequest initialRequest = new SignUpRequest("test@email.com", "password123!", "testuser", "안녕하세요", "INFP");
+        SignUpRequest initialRequest = new SignUpRequest("test@email.com", "Password123!", "testuser", "안녕하세요", "INFP");
         restTemplate.exchange(
             "/api/v1/auth/signup",
             HttpMethod.POST,
@@ -81,7 +81,7 @@ class SignUpE2ETest extends AuthE2ETest {
     void signUp_fail_duplicatedNickname() {
         // given
         // 먼저 사용자를 하나 가입시킴
-        SignUpRequest initialRequest = new SignUpRequest("test@email.com", "password123!", "testuser", "안녕하세요", "INFP");
+        SignUpRequest initialRequest = new SignUpRequest("test@email.com", "Password123!", "testuser", "안녕하세요", "INFP");
         restTemplate.exchange(
             "/api/v1/auth/signup",
             HttpMethod.POST,
@@ -123,7 +123,7 @@ class SignUpE2ETest extends AuthE2ETest {
     private static Stream<Arguments> invalidSignUpRequests() {
         return Stream.of(
             // Invalid Email
-            Arguments.of(new SignUpRequest("invalid-email", "password123!", "testuser", "hi", "INFP")),
+            Arguments.of(new SignUpRequest("invalid-email", "Password123!", "testuser", "hi", "INFP")),
             // Short Password
             Arguments.of(new SignUpRequest("test@email.com", "pass", "testuser", "hi", "INFP")),
             // Password without number
@@ -133,6 +133,6 @@ class SignUpE2ETest extends AuthE2ETest {
             // Password without letter
             Arguments.of(new SignUpRequest("test@email.com", "12345678!", "testuser", "hi", "INFP")),
             // Blank Nickname
-            Arguments.of(new SignUpRequest("test@email.com", "password123!", "", "hi", "INFP")));
+            Arguments.of(new SignUpRequest("test@email.com", "Password123!", "", "hi", "INFP")));
     }
 }

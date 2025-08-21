@@ -25,11 +25,11 @@ class UpdateCommentE2ETest extends CommentE2ETest {
 
     @BeforeEach
     void setUp() {
-        String userAEmail = signUp("userA@email.com", "password123!", "userA");
-        userAToken = login(userAEmail, "password123!");
+        String userAEmail = signUp("userA@email.com", "Password123!", "userA");
+        userAToken = login(userAEmail, "Password123!");
 
-        String userBEmail = signUp("userB@email.com", "password123!", "userB");
-        userBToken = login(userBEmail, "password123!");
+        String userBEmail = signUp("userB@email.com", "Password123!", "userB");
+        userBToken = login(userBEmail, "Password123!");
 
         postId = createPost(userAToken, "This is a post by userA.");
         commentId = writeComment(userAToken, postId, "This is a comment by userA.");

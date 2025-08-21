@@ -22,7 +22,7 @@ class LoginE2ETest extends AuthE2ETest {
         // 로그인을 테스트하기 위해 미리 회원가입을 시켜놓음
         SignUpRequest request = new SignUpRequest(
             "test@email.com",
-            "password123!",
+            "Password123!",
             "testuser",
             "안녕하세요",
             "INFP");
@@ -33,7 +33,7 @@ class LoginE2ETest extends AuthE2ETest {
     @DisplayName("로그인 성공")
     void login_success() {
         // given
-        LoginRequest request = new LoginRequest("test@email.com", "password123!");
+        LoginRequest request = new LoginRequest("test@email.com", "Password123!");
 
         // when
         ResponseEntity<GlobalApiResponse<LoginResponse>> response = restTemplate.exchange(
@@ -53,7 +53,7 @@ class LoginE2ETest extends AuthE2ETest {
     @DisplayName("로그인 실패 - 존재하지 않는 이메일")
     void login_fail_emailNotFound() {
         // given
-        LoginRequest request = new LoginRequest("nonexistent@email.com", "password123!");
+        LoginRequest request = new LoginRequest("nonexistent@email.com", "Password123!");
 
         // when
         ResponseEntity<GlobalApiResponse<Void>> response = restTemplate.exchange(

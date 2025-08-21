@@ -24,11 +24,11 @@ class AuthRequiredE2ETest extends AuthE2ETest {
     @BeforeEach
     void setUp() {
         // 사용자 가입
-        SignUpRequest signUpRequest = new SignUpRequest("test@email.com", "password123!", "testuser", "안녕하세요", "INFP");
+        SignUpRequest signUpRequest = new SignUpRequest("test@email.com", "Password123!", "testuser", "안녕하세요", "INFP");
         restTemplate.postForEntity("/api/v1/auth/signup", signUpRequest, String.class);
 
         // 로그인 후 토큰 획득
-        LoginRequest loginRequest = new LoginRequest("test@email.com", "password123!");
+        LoginRequest loginRequest = new LoginRequest("test@email.com", "Password123!");
         ResponseEntity<GlobalApiResponse<LoginResponse>> response = restTemplate.exchange(
             "/api/v1/auth/login",
             HttpMethod.POST,
@@ -42,7 +42,7 @@ class AuthRequiredE2ETest extends AuthE2ETest {
     @DisplayName("비밀번호 변경 성공")
     void changePassword_success() {
         // given
-        ChangePasswordRequest request = new ChangePasswordRequest("password123!", "newPassword456!");
+        ChangePasswordRequest request = new ChangePasswordRequest("Password123!", "newPassword456!");
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(jwtToken);
         HttpEntity<ChangePasswordRequest> entity = new HttpEntity<>(request, headers);
@@ -81,6 +81,27 @@ class AuthRequiredE2ETest extends AuthE2ETest {
     }
 
     @Test
+    @DisplayName("비밀번호 변경 실패 - 현재 사용중인 비밀번호")
+    void changePassword_fail_currentPasswordInUse() {
+        // given
+        ChangePasswordRequest request = new ChangePasswordRequest("Password123!", "Password123!");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(jwtToken);
+        HttpEntity<ChangePasswordRequest> entity = new HttpEntity<>(request, headers);
+
+        // when
+        ResponseEntity<GlobalApiResponse<Void>> response = restTemplate.exchange(
+            "/api/v1/auth/me/password",
+            HttpMethod.PATCH,
+            entity,
+            new ParameterizedTypeReference<>() {
+            });
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
     @DisplayName("로그아웃 성공")
     void logout_success() {
         // given
@@ -100,7 +121,7 @@ class AuthRequiredE2ETest extends AuthE2ETest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         // and when - 로그아웃한 토큰으로 다시 요청
-        ChangePasswordRequest request = new ChangePasswordRequest("password123!", "newPassword456!");
+        ChangePasswordRequest request = new ChangePasswordRequest("Password123!", "newPassword456!");
         HttpEntity<ChangePasswordRequest> nextEntity = new HttpEntity<>(request, headers);
         ResponseEntity<GlobalApiResponse<Void>> nextResponse = restTemplate.exchange(
             "/api/v1/auth/me/password",
@@ -117,7 +138,7 @@ class AuthRequiredE2ETest extends AuthE2ETest {
     @DisplayName("회원탈퇴 성공")
     void withdraw_success() {
         // given
-        WithdrawRequest request = new WithdrawRequest("password123!");
+        WithdrawRequest request = new WithdrawRequest("Password123!");
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(jwtToken);
         HttpEntity<WithdrawRequest> entity = new HttpEntity<>(request, headers);

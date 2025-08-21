@@ -19,8 +19,8 @@ class GetCommentE2ETest extends CommentE2ETest {
 
     @BeforeEach
     void setUp() {
-        String email = signUp("test@email.com", "password123!", "testuser");
-        accessToken = login(email, "password123!");
+        String email = signUp("test@email.com", "Password123!", "testuser");
+        accessToken = login(email, "Password123!");
         postId = createPost(accessToken, "This is a test post.");
     }
 

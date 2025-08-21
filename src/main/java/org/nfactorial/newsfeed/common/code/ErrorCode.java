@@ -10,11 +10,12 @@ import lombok.Getter;
 public enum ErrorCode implements GlobalResponseCode {
 	NOT_AUTHENTICATED("AUTH-401", "인증이 필요합니다.", HttpStatus.UNAUTHORIZED),
 	EMAIL_DUPLICATED("AUTH-400", "중복되는 이메일입니다.", HttpStatus.BAD_REQUEST),
-	NICKNAME_DUPLICATED("AUTH-400", "중복되는 닉네임입니다.", HttpStatus.BAD_REQUEST),
-	INVALID_TOKEN("AUTH-400", "유효하지 않은 토큰입니다.", HttpStatus.BAD_REQUEST),
+	NICKNAME_DUPLICATED("AUTH-400-1", "중복되는 닉네임입니다.", HttpStatus.BAD_REQUEST),
+	INVALID_TOKEN("AUTH-400-2", "유효하지 않은 토큰입니다.", HttpStatus.BAD_REQUEST),
 	LOGIN_FAILED("AUTH-401-1", "로그인에 실패하였습니다.", HttpStatus.UNAUTHORIZED),
 	ACCOUNT_NOT_FOUND("AUTH-404", "계정을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 	PASSWORD_DOESNT_MATCH("AUTH-401-2", "비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
+	NEW_PASSWORD_SAME_AS_CURRENT("AUTH-400-3", "새로운 비밀번호가 현재 비밀번호와 같습니다.", HttpStatus.BAD_REQUEST),
 	PROFILE_NOT_FOUND("PROFILE-404", "프로필을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 
 	//Post
