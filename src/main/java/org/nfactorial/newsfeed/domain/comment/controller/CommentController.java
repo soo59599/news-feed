@@ -4,20 +4,12 @@ import org.nfactorial.newsfeed.common.code.SuccessCode;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
 import org.nfactorial.newsfeed.common.security.AuthProfile;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
-import org.nfactorial.newsfeed.domain.comment.dto.CommentListByPostResult;
-import org.nfactorial.newsfeed.domain.comment.dto.GetCommentsFromPostResponse;
 import org.nfactorial.newsfeed.domain.comment.dto.UpdateCommentRequest;
 import org.nfactorial.newsfeed.domain.comment.dto.UpdateCommentResponse;
-import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentCommand;
-import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentRequest;
-import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResponse;
-import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResult;
 import org.nfactorial.newsfeed.domain.comment.service.CommentService;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,33 +23,22 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 	private final CommentService commentService;
 
-	@GetMapping("/posts/{postId}/comments")
-	public GlobalApiResponse<?> getCommentsFromPost(@PathVariable("postId") long postId) {
-		CommentListByPostResult result = commentService.commentListByPost(postId);
-		return GlobalApiResponse.of(SuccessCode.OK, GetCommentsFromPostResponse.of(result));
-	}
-
-	@PostMapping("/posts/{postId}/comments")
-	public GlobalApiResponse<?> writeComment(@PathVariable("postId") long postId,
-		@AuthProfile AuthProfileDto authProfile,
-		@Valid @RequestBody WriteCommentRequest request) {
-		WriteCommentCommand command = WriteCommentCommand.of(postId, authProfile.profileId(), request.content());
-		WriteCommentResult result = commentService.writeComment(command);
-		WriteCommentResponse response = WriteCommentResponse.of(result);
-		return GlobalApiResponse.of(SuccessCode.OK, response);
-	}
-
 	@DeleteMapping("/comments/{commentId}")
-	public GlobalApiResponse<?> deleteComment(@PathVariable("commentId") long commentId,
-		@AuthProfile AuthProfileDto authProfile) {
+	public GlobalApiResponse<?> deleteComment(@PathVariable("commentId")
+	long commentId,
+		@AuthProfile
+		AuthProfileDto authProfile) {
 		commentService.deleteById(commentId, authProfile.profileId());
 		return GlobalApiResponse.of(SuccessCode.OK, null);
 	}
 
 	@PatchMapping("/comments/{commentId}")
-	public GlobalApiResponse<?> updateComment(@PathVariable("commentId") long commentId,
-		@AuthProfile AuthProfileDto authProfile,
-		@Valid @RequestBody UpdateCommentRequest request) {
+	public GlobalApiResponse<?> updateComment(@PathVariable("commentId")
+	long commentId,
+		@AuthProfile
+		AuthProfileDto authProfile,
+		@Valid @RequestBody
+		UpdateCommentRequest request) {
 		String updatedContent = commentService.updateById(commentId, request.content(), authProfile.profileId());
 		return GlobalApiResponse.of(SuccessCode.OK, new UpdateCommentResponse(commentId, updatedContent));
 	}

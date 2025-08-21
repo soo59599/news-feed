@@ -4,15 +4,10 @@ import java.util.List;
 
 import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
-import org.nfactorial.newsfeed.domain.comment.dto.CommentListByPostResult;
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentCommand;
-import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentResult;
 import org.nfactorial.newsfeed.domain.comment.entity.Comment;
 import org.nfactorial.newsfeed.domain.comment.repository.CommentRepository;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
-import org.nfactorial.newsfeed.domain.post.service.PostServiceApi;
-import org.nfactorial.newsfeed.domain.profile.entity.Profile;
-import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentService implements CommentServiceApi {
 	private final CommentRepository commentRepository;
-	private final PostServiceApi postService;
-	private final ProfileServiceApi profileService;
 
 	@Override
 	public int getCommentCount(Post post) {
@@ -32,16 +25,11 @@ public class CommentService implements CommentServiceApi {
 	}
 
 	@Transactional
-	public WriteCommentResult writeComment(WriteCommentCommand command) {
-		Post post = postService.getPostById(command.postId());
-		Profile profile = profileService.getProfileById(command.profileId());
-		Comment comment = Comment.write(post, profile, command.content());
+	@Override
+	public Comment writeComment(WriteCommentCommand command) {
+		Comment comment = Comment.write(command.post(), command.profile(), command.content());
 		Comment savedComment = commentRepository.save(comment);
-		return WriteCommentResult.builder()
-			.id(savedComment.getId())
-			.createdAt(savedComment.getCreatedAt())
-			.content(savedComment.getContent())
-			.build();
+		return savedComment;
 	}
 
 	@Transactional
@@ -57,11 +45,11 @@ public class CommentService implements CommentServiceApi {
 		return comment.getContent();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public CommentListByPostResult commentListByPost(long postId) {
-		Post post = postService.getPostById(postId);
+	public List<Comment> commentListByPost(Post post) {
 		List<Comment> comments = commentRepository.findAllByPost(post);
-		return CommentListByPostResult.of(comments);
+		return comments;
 	}
 
 	private Comment getOwnedComment(long commentId, long profileId) {

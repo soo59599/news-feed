@@ -1,10 +1,11 @@
-package org.nfactorial.newsfeed.domain.comment.dto;
+package org.nfactorial.newsfeed.domain.postcomment.dto.response;
 
 import java.util.List;
 
+import org.nfactorial.newsfeed.domain.postcomment.dto.result.CommentListByPostResult;
+
 public record GetCommentsFromPostResponse(
-	List<SimpleComment> comments
-) {
+	List<SimpleComment> comments) {
 	public static GetCommentsFromPostResponse of(CommentListByPostResult comments) {
 		List<SimpleComment> commentList = comments.comments().stream()
 			.map(SimpleComment::of)
@@ -15,14 +16,12 @@ public record GetCommentsFromPostResponse(
 	record SimpleComment(
 		long id,
 		String nickname,
-		String content
-	) {
+		String content) {
 		public static SimpleComment of(CommentListByPostResult.SimpleComment comment) {
 			return new SimpleComment(
 				comment.id(),
 				comment.nickname(),
-				comment.content()
-			);
+				comment.content());
 		}
 	}
 }
