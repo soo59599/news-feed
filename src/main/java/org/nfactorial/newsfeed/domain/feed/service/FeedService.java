@@ -30,7 +30,6 @@ public class FeedService {
 
 	private final FeedRepository feedRepository;
 	private final ProfileService profileService;
-	private final ProfileRepository profileRepository;
 
 	//피드 전체 조회
 	public PageResponseDto<FeedResponse> findAll(FeedPageRequest feedPageRequest) {
@@ -55,8 +54,7 @@ public class FeedService {
 	public FeedSpecificAccountResponse findAccountPostAll(Long profileId,
 		FeedPageRequest feedPageRequest) {
 
-		Profile profile = profileRepository.findById(profileId)
-			.orElseThrow(() -> new BusinessException(ErrorCode.PROFILE_NOT_FOUND));
+		Profile profile = profileService.getProfileById(profileId);
 
 		long offset = (feedPageRequest.getPageNumber() - 1) * feedPageRequest.getSize();
 		long limit = feedPageRequest.getSize();
