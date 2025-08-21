@@ -9,6 +9,7 @@ import org.nfactorial.newsfeed.common.code.ErrorCode;
 import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.domain.comment.service.CommentServiceApi;
+import org.nfactorial.newsfeed.domain.interaction.service.InteractionQueryServiceApi;
 import org.nfactorial.newsfeed.domain.post.dto.PostCountDto;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostUpdateRequest;
@@ -32,6 +33,7 @@ public class PostService implements PostServiceApi {
 	private final PostRepository postRepository;
 	private final CommentServiceApi commentService;
 	private final ProfileServiceApi profileService;
+	private final InteractionQueryServiceApi interactionQueryService;
 
 	@Transactional
 	public PostCreateResponse save(PostCreateRequest request, AuthProfileDto currentUserProfile) {
@@ -58,14 +60,18 @@ public class PostService implements PostServiceApi {
 		return PostUpdateResponse.of(foundPost);
 	}
 
-	@Transactional(readOnly = true)
-	public PostGetOneResponse findById(Long postId) {
+	@Transactional
+	public PostGetOneResponse viewPost(Long postId) {
+
+		postRepository.incrementViewCount(postId);
 
 		Post foundPost = getPostById(postId);
 
+		boolean hasLikedPost = interactionQueryService.hasLikedPost(foundPost.getId(), foundPost.getProfile().getId());
+
 		int commentCount = commentService.getCommentCount(foundPost);
 
-		return PostGetOneResponse.of(foundPost, commentCount);
+		return PostGetOneResponse.of(foundPost, commentCount, hasLikedPost);
 	}
 
 	@Transactional
@@ -111,4 +117,5 @@ public class PostService implements PostServiceApi {
 				profile -> countMap.getOrDefault(profile.getId(), 0L)
 			));
 	}
+
 }

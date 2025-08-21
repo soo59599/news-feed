@@ -24,7 +24,6 @@ public class InteractionQueryService implements InteractionQueryServiceApi {
 	private final FollowRepository followRepository;
 	private final LikeRepository likeRepository;
 	private final ProfileServiceApi profileService;
-	private final PostService postService;
 
 	@Override
 	public FollowStatusResponse checkFollowStatus(Long followerId, Long followingId) {

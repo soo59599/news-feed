@@ -15,10 +15,12 @@ public record PostGetOneResponse(
 	String content,
 	int likeCount,
 	int commentCount,
+	int viewCount,
+	boolean hasLikedPost,
 	LocalDateTime createdAt,
 	LocalDateTime modifiedAt
 ) {
-	public static PostGetOneResponse of(Post post, int commentCount) {
+	public static PostGetOneResponse of(Post post, int commentCount, boolean hasLikedPost) {
 		Profile profile = post.getProfile();
 
 		return PostGetOneResponse.builder()
@@ -28,6 +30,8 @@ public record PostGetOneResponse(
 			.content(post.getContent())
 			.likeCount(post.getLikeCount())
 			.commentCount(commentCount)
+			.viewCount(post.getViewCount())
+			.hasLikedPost(hasLikedPost)
 			.createdAt(post.getCreatedAt())
 			.modifiedAt(post.getModifiedAt())
 			.build();

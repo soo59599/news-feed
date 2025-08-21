@@ -53,9 +53,9 @@ public class PostController {
 
 	@GetMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
-	public GlobalApiResponse<PostGetOneResponse> findById(@PathVariable Long postId) {
+	public GlobalApiResponse<PostGetOneResponse> viewPost(@PathVariable Long postId) {
 
-		PostGetOneResponse response = postService.findById(postId);
+		PostGetOneResponse response = postService.viewPost(postId);
 
 		return GlobalApiResponse.of(SuccessCode.OK, response);
 	}

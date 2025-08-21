@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,18 +25,24 @@ public class Post extends BaseTimeEntity {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "profile_id", nullable = false)
 	private Profile profile;
 
 	@Column(nullable = false)
 	private String content;
 
+	@Column(nullable = false)
 	private int likeCount;
+
+	@Column(nullable = false)
+	private int viewCount;
 
 	public static Post of(PostCreateRequest request, Profile profile) {
 		Post post = new Post();
 		post.content = request.content();
 		post.profile = profile;
 		post.likeCount = 0;
+		post.viewCount = 0;
 		return post;
 	}
 
