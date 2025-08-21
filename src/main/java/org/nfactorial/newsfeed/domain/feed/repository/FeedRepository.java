@@ -14,7 +14,7 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 
 	@Query(value = """
 			SELECT p.content, p.like_count, p.created_at,
-			f.nickname, COALESCE(COUNT(c.id), 0) AS commentCount,
+			f.nickname, COALESCE(COUNT(c.id), 0) AS commentCount
 			FROM post p
 			INNER JOIN profile f ON f.id = p.profile_id
 			LEFT JOIN comment c ON c.post_id = p.id
