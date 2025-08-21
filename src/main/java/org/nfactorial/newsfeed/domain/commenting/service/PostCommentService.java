@@ -1,15 +1,15 @@
-package org.nfactorial.newsfeed.domain.postcomment.service;
+package org.nfactorial.newsfeed.domain.commenting.service;
 
 import java.util.List;
 
 import org.nfactorial.newsfeed.domain.comment.dto.WriteCommentCommand;
 import org.nfactorial.newsfeed.domain.comment.entity.Comment;
 import org.nfactorial.newsfeed.domain.comment.service.CommentServiceApi;
+import org.nfactorial.newsfeed.domain.commenting.dto.command.WriteCommentToPostCommand;
+import org.nfactorial.newsfeed.domain.commenting.dto.result.CommentListByPostResult;
+import org.nfactorial.newsfeed.domain.commenting.dto.result.WriteCommentToPostResult;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
 import org.nfactorial.newsfeed.domain.post.service.PostServiceApi;
-import org.nfactorial.newsfeed.domain.postcomment.dto.command.WriteCommentToPostCommand;
-import org.nfactorial.newsfeed.domain.postcomment.dto.result.CommentListByPostResult;
-import org.nfactorial.newsfeed.domain.postcomment.dto.result.WriteCommentToPostResult;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
 import org.springframework.stereotype.Service;

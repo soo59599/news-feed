@@ -1,4 +1,4 @@
-package org.nfactorial.newsfeed.domain.postcomment.dto.result;
+package org.nfactorial.newsfeed.domain.commenting.dto.result;
 
 import java.time.LocalDateTime;
 
