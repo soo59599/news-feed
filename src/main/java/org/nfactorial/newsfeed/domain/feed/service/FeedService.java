@@ -1,10 +1,9 @@
 package org.nfactorial.newsfeed.domain.feed.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.nfactorial.newsfeed.common.code.ErrorCode;
-import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.domain.feed.dto.request.FeedPageRequest;
 import org.nfactorial.newsfeed.domain.feed.dto.response.FeedAccountPostProjection;
 import org.nfactorial.newsfeed.domain.feed.dto.response.FeedFollowPostResponse;
@@ -16,7 +15,6 @@ import org.nfactorial.newsfeed.domain.feed.dto.response.FeedSpecificResponse;
 import org.nfactorial.newsfeed.domain.feed.dto.response.PageResponseDto;
 import org.nfactorial.newsfeed.domain.feed.repository.FeedRepository;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
-import org.nfactorial.newsfeed.domain.profile.repository.ProfileRepository;
 import org.nfactorial.newsfeed.domain.profile.service.ProfileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +34,8 @@ public class FeedService {
 		long offset = (feedPageRequest.getPageNumber() - 1) * feedPageRequest.getSize();
 		long limit = feedPageRequest.getSize();
 
-		List<FeedResponseProjection> all = feedRepository.findPostWithNicknameAll(offset, limit);
+		List<FeedResponseProjection> all = feedRepository.findPostWithNicknameAll(offset, limit,
+			feedPageRequest.getStartDate(), feedPageRequest.getEndDate());
 
 		List<FeedResponse> feedResponseList = all.stream()
 			.map(feed -> FeedResponse.of(

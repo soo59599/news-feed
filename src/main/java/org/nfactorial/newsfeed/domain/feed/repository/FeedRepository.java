@@ -1,5 +1,6 @@
 package org.nfactorial.newsfeed.domain.feed.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.nfactorial.newsfeed.domain.feed.dto.response.FeedAccountPostProjection;
@@ -18,11 +19,14 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 			FROM post p
 			INNER JOIN profile f ON f.id = p.profile_id
 			LEFT JOIN comment c ON c.post_id = p.id
+			WHERE DATE(p.created_at) BETWEEN :startDate AND :endDate
 			GROUP BY p.id, p.content, p.like_count, p.created_at, f.nickname
 			ORDER BY p.created_at desc
 			LIMIT :size OFFSET :offset;
 		""", nativeQuery = true)
-	List<FeedResponseProjection> findPostWithNicknameAll(@Param("offset") long offset, @Param("size") long size);
+	List<FeedResponseProjection> findPostWithNicknameAll(
+		@Param("offset") long offset, @Param("size") long size,
+		@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 	@Query(value = """
 			SELECT COUNT(*) FROM post;
