@@ -8,6 +8,7 @@ import org.nfactorial.newsfeed.common.security.AuthProfile;
 import org.nfactorial.newsfeed.common.security.AuthProfileDto;
 import org.nfactorial.newsfeed.domain.interaction.dto.response.FollowStatusResponse;
 import org.nfactorial.newsfeed.domain.interaction.service.FollowService;
+import org.nfactorial.newsfeed.domain.interaction.service.InteractionQueryServiceApi;
 import org.nfactorial.newsfeed.domain.profile.dto.ProfileSummaryDto;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FollowController {
 
+	private final InteractionQueryServiceApi interactionQueryService;
 	private final FollowService followService;
 
 	@PostMapping("/api/v1/profiles/{followingId}/follows")
@@ -47,8 +49,12 @@ public class FollowController {
 		@PathVariable Long followingId,
 		@AuthProfile AuthProfileDto currentProfile
 	) {
-		
-		FollowStatusResponse responseDto = followService.checkFollowStatus(currentProfile.profileId(), followingId);
+
+		FollowStatusResponse responseDto = interactionQueryService.checkFollowStatus(
+			currentProfile.profileId(),
+			followingId
+		);
+
 		return GlobalApiResponse.of(SuccessCode.OK, responseDto);
 	}
 
@@ -56,7 +62,7 @@ public class FollowController {
 	public GlobalApiResponse<Slice<ProfileSummaryDto>> getFollowingProfiles(
 		@PathVariable Long followerId) {
 
-		List<ProfileSummaryDto> responseDto = followService.getFollowingProfiles(followerId);
+		List<ProfileSummaryDto> responseDto = interactionQueryService.getFollowingProfiles(followerId);
 		return GlobalApiResponse.of(SuccessCode.OK, responseDto);
 	}
 
@@ -64,7 +70,7 @@ public class FollowController {
 	public GlobalApiResponse<Slice<ProfileSummaryDto>> getMyFollowingProfiles(
 		@AuthProfile AuthProfileDto currentProfile) {
 
-		List<ProfileSummaryDto> responseDto = followService.getFollowingProfiles(currentProfile.profileId());
+		List<ProfileSummaryDto> responseDto = interactionQueryService.getFollowingProfiles(currentProfile.profileId());
 		return GlobalApiResponse.of(SuccessCode.OK, responseDto);
 	}
 }
