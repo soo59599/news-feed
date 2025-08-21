@@ -5,9 +5,7 @@ import lombok.Builder;
 @Builder
 public record SignUpResponse(
 	long accountId,
-	String nickname,
-	String email
-) {
+	String email) {
 	public static SignUpResponse of(SignUpResult signUpResult) {
 		return SignUpResponse.builder()
 			.accountId(signUpResult.accountId())
