@@ -10,7 +10,6 @@ import org.nfactorial.newsfeed.domain.interaction.dto.response.FollowStatusRespo
 import org.nfactorial.newsfeed.domain.interaction.service.FollowService;
 import org.nfactorial.newsfeed.domain.interaction.service.InteractionQueryServiceApi;
 import org.nfactorial.newsfeed.domain.profile.dto.ProfileSummaryDto;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +58,7 @@ public class FollowController {
 	}
 
 	@GetMapping("/api/v1/profiles/{followerId}/followings")
-	public GlobalApiResponse<Slice<ProfileSummaryDto>> getFollowingProfiles(
+	public GlobalApiResponse<List<ProfileSummaryDto>> getFollowingProfiles(
 		@PathVariable Long followerId) {
 
 		List<ProfileSummaryDto> responseDto = interactionQueryService.getFollowingProfiles(followerId);
@@ -67,7 +66,7 @@ public class FollowController {
 	}
 
 	@GetMapping("/api/v1/profiles/me/followings")
-	public GlobalApiResponse<Slice<ProfileSummaryDto>> getMyFollowingProfiles(
+	public GlobalApiResponse<List<ProfileSummaryDto>> getMyFollowingProfiles(
 		@AuthProfile AuthProfileDto currentProfile) {
 
 		List<ProfileSummaryDto> responseDto = interactionQueryService.getFollowingProfiles(currentProfile.profileId());
