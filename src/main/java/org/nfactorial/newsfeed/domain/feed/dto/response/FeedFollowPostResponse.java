@@ -12,18 +12,20 @@ public class FeedFollowPostResponse {
 	private int likeCount;
 	private int commentCount;
 	private LocalDateTime createdAt;
+	private int viewCount;
 
 	public FeedFollowPostResponse(String nickname, String contents, int likeCount, int commentCount,
-		LocalDateTime createdAt) {
+		LocalDateTime createdAt, int viewCount) {
 		this.nickname = nickname;
 		this.contents = contents;
 		this.likeCount = likeCount;
 		this.commentCount = commentCount;
 		this.createdAt = createdAt;
+		this.viewCount = viewCount;
 	}
 
 	public static FeedFollowPostResponse of(String nickname, String contents, int likeCount, int commentCount,
-		LocalDateTime createdAt) {
-		return new FeedFollowPostResponse(nickname, contents, likeCount, commentCount, createdAt);
+		LocalDateTime createdAt, int viewCount) {
+		return new FeedFollowPostResponse(nickname, contents, likeCount, commentCount, createdAt, viewCount);
 	}
 }

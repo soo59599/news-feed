@@ -12,4 +12,6 @@ public interface FeedResponseProjection {
 	LocalDateTime getCreatedAt();
 
 	String getNickname();
+
+	Integer getViewCount();
 }

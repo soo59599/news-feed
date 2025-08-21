@@ -15,11 +15,12 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 
 	@Query(value = """
 			SELECT p.content, p.like_count, p.created_at,
-			f.nickname, COALESCE(COUNT(c.id), 0) AS commentCount
+			f.nickname, COALESCE(COUNT(c.id), 0) AS commentCount,
+			p.view_count
 			FROM post p
 			INNER JOIN profile f ON f.id = p.profile_id
 			LEFT JOIN comment c ON c.post_id = p.id
-			WHERE DATE(p.created_at) BETWEEN :startDate AND :endDate
+			WHERE (:startDate IS NULL OR :endDate IS NULL OR DATE(p.created_at) BETWEEN :startDate AND :endDate)
 			GROUP BY p.id, p.content, p.like_count, p.created_at, f.nickname
 			ORDER BY p.created_at desc
 			LIMIT :size OFFSET :offset;
@@ -36,7 +37,8 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 	@Query(value = """
 			SELECT p.id, p.profile_id ,p.content, p.like_count, p.created_at,
 		 	f.nickname, f.mbti, f.introduce, f.follow_count,
-		 	COALESCE(COUNT(c.id), 0) AS commentCount
+		 	COALESCE(COUNT(c.id), 0) AS commentCount,
+		 	p.view_count
 		 	FROM post p
 		 	INNER JOIN profile f ON f.id = p.profile_id
 		 	LEFT JOIN comment c ON c.post_id = p.id
@@ -56,7 +58,9 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 
 	@Query(value = """
 			SELECT p.content, p.like_count, p.created_at, f.nickname, 
-			COALESCE(COUNT(c.id), 0) AS commentCount FROM post p
+			COALESCE(COUNT(c.id), 0) AS commentCount,
+			p.view_count
+			FROM post p
 		 	INNER JOIN profile f ON f.id = p.profile_id
 		 	INNER JOIN follow fw ON fw.following_id = f.id
 		 	LEFT JOIN comment c ON c.post_id = p.id

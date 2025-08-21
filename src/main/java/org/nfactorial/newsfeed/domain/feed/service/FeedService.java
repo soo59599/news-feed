@@ -1,6 +1,5 @@
 package org.nfactorial.newsfeed.domain.feed.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,7 @@ public class FeedService {
 			.map(feed -> FeedResponse.of(
 				feed.getNickname(), feed.getContent(),
 				feed.getLikeCount(), feed.getCommentCount(),
-				feed.getCreatedAt()
+				feed.getCreatedAt(), feed.getViewCount()
 			)).collect(Collectors.toList());
 
 		Long totalElements = feedRepository.countPostsAll();
@@ -70,7 +69,7 @@ public class FeedService {
 		List<FeedSpecificResponse> currentPosts = accountPostAll.stream()
 			.map(accountPost -> FeedSpecificResponse.of(
 				accountPost.getNickname(), accountPost.getCreatedAt(), accountPost.getContent(),
-				accountPost.getLikeCount(), accountPost.getCommentCount()
+				accountPost.getLikeCount(), accountPost.getCommentCount(), accountPost.getViewCount()
 			)).collect(Collectors.toList());
 
 		PageResponseDto<FeedSpecificResponse> postsPage = PageResponseDto.of(offset, limit,
@@ -89,7 +88,7 @@ public class FeedService {
 		List<FeedFollowPostResponse> followerPost = feedRepository.findFollowPostAll(profile.getId())
 			.stream().map(follow -> FeedFollowPostResponse.of(
 				follow.getNickname(), follow.getContents(), follow.getLikeCount(),
-				follow.getCommentCount(), follow.getCreatedAt()
+				follow.getCommentCount(), follow.getCreatedAt(), follow.getViewCount()
 			)).collect(Collectors.toList());
 
 		Long followPostCount = feedRepository.countFollowPostAll(profile.getId());

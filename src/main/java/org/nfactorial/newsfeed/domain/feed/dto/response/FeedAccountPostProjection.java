@@ -16,4 +16,6 @@ public interface FeedAccountPostProjection {
 	LocalDateTime getCreatedAt();
 
 	String getNickname();
+
+	int getViewCount();
 }

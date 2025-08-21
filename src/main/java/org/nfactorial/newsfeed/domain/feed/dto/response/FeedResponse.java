@@ -12,17 +12,20 @@ public class FeedResponse {
 	private int likeCount;
 	private int commentCount;
 	private LocalDateTime createdAt;
+	private int viewCount;
 
-	public FeedResponse(String nickname, String contents, int likeCount, int commentCount, LocalDateTime createdAt) {
+	public FeedResponse(String nickname, String contents, int likeCount, int commentCount, LocalDateTime createdAt,
+		int viewCount) {
 		this.nickname = nickname;
 		this.contents = contents;
 		this.likeCount = likeCount;
 		this.commentCount = commentCount;
 		this.createdAt = createdAt;
+		this.viewCount = viewCount;
 	}
 
 	public static FeedResponse of(String nickname, String contents, int likeCount, int commentCount,
-		LocalDateTime createdAt) {
-		return new FeedResponse(nickname, contents, likeCount, commentCount, createdAt);
+		LocalDateTime createdAt, int viewCount) {
+		return new FeedResponse(nickname, contents, likeCount, commentCount, createdAt, viewCount);
 	}
 }

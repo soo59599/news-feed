@@ -13,4 +13,6 @@ public interface FeedFollowPostProjection {
 	int getCommentCount();
 
 	LocalDateTime getCreatedAt();
+
+	int getViewCount();
 }
