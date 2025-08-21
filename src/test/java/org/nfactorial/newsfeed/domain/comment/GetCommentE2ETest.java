@@ -2,6 +2,8 @@ package org.nfactorial.newsfeed.domain.comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Objects;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,9 +45,10 @@ class GetCommentE2ETest extends CommentE2ETest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().data().comments()).hasSize(2);
-        assertThat(response.getBody().data().comments().get(0).content()).isEqualTo("First comment");
-        assertThat(response.getBody().data().comments().get(1).content()).isEqualTo("Second comment");
+        var nonNullBody = Objects.requireNonNull(response.getBody());
+        assertThat(nonNullBody.data().comments()).hasSize(2);
+        assertThat(nonNullBody.data().comments().get(0).content()).isEqualTo("First comment");
+        assertThat(nonNullBody.data().comments().get(1).content()).isEqualTo("Second comment");
     }
 
     @Test
@@ -64,7 +67,7 @@ class GetCommentE2ETest extends CommentE2ETest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().data().comments()).isEmpty();
+        assertThat(Objects.requireNonNull(response.getBody()).data().comments()).isEmpty();
     }
 
 }

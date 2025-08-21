@@ -3,6 +3,7 @@ package org.nfactorial.newsfeed.domain.auth;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,9 +42,11 @@ class SignUpE2ETest extends AuthE2ETest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().code()).isEqualTo("SUCC-201");
-        SignUpResponse signUpResponse = response.getBody().data();
+        GlobalApiResponse<SignUpResponse> body = response.getBody();
+        assertThat(body).isNotNull();
+        Objects.requireNonNull(body);
+        assertThat(body.code()).isEqualTo("SUCC-201");
+        SignUpResponse signUpResponse = body.data();
         assertThat(signUpResponse.email()).isEqualTo(request.email());
         assertThat(signUpResponse.accountId()).isNotNull();
     }

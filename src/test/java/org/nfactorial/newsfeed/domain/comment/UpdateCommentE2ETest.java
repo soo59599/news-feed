@@ -3,6 +3,8 @@ package org.nfactorial.newsfeed.domain.comment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
+import java.util.Objects;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +55,7 @@ class UpdateCommentE2ETest extends CommentE2ETest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().data().content()).isEqualTo("Updated content");
+        assertThat(Objects.requireNonNull(response.getBody()).data().content()).isEqualTo("Updated content");
 
         Comment updatedComment = commentRepository.findById(commentId).orElseThrow();
         assertThat(updatedComment.getContent()).isEqualTo("Updated content");

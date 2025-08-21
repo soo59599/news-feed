@@ -2,6 +2,8 @@ package org.nfactorial.newsfeed.domain.auth;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Objects;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,8 +47,8 @@ class LoginE2ETest extends AuthE2ETest {
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().data().accessToken()).isNotBlank();
+        GlobalApiResponse<LoginResponse> body = Objects.requireNonNull(response.getBody());
+        assertThat(body.data().accessToken()).isNotBlank();
     }
 
     @Test

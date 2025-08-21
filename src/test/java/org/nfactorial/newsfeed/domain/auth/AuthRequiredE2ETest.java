@@ -2,6 +2,8 @@ package org.nfactorial.newsfeed.domain.auth;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,11 @@ class AuthRequiredE2ETest extends AuthE2ETest {
             new HttpEntity<>(loginRequest),
             new ParameterizedTypeReference<>() {
             });
-        this.jwtToken = response.getBody().data().accessToken();
+
+        this.jwtToken = Optional.ofNullable(response.getBody())
+            .map(GlobalApiResponse::data)
+            .map(LoginResponse::accessToken)
+            .orElseThrow(() -> new IllegalStateException("로그인 응답이 비어있습니다"));
     }
 
     @Test

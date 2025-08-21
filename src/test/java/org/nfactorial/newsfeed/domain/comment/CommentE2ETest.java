@@ -1,5 +1,7 @@
 package org.nfactorial.newsfeed.domain.comment;
 
+import java.util.Objects;
+
 import org.junit.jupiter.api.AfterEach;
 import org.nfactorial.newsfeed.domain.auth.AuthE2ETest;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
@@ -43,7 +45,7 @@ public class CommentE2ETest extends AuthE2ETest {
             new HttpEntity<>(request),
             new ParameterizedTypeReference<>() {
             });
-        return response.getBody().data().accessToken();
+        return Objects.requireNonNull(response.getBody()).data().accessToken();
     }
 
     protected Long createPost(String accessToken, String content) {
@@ -57,7 +59,7 @@ public class CommentE2ETest extends AuthE2ETest {
             new HttpEntity<>(request, headers),
             new ParameterizedTypeReference<>() {
             });
-        return response.getBody().data().postId();
+        return Objects.requireNonNull(response.getBody()).data().postId();
     }
 
     protected Long writeComment(String accessToken, Long postId, String content) {
@@ -69,7 +71,7 @@ public class CommentE2ETest extends AuthE2ETest {
             new HttpEntity<>(request, headers),
             new ParameterizedTypeReference<>() {
             });
-        return response.getBody().data().id();
+        return Objects.requireNonNull(response.getBody()).data().id();
     }
 
     @AfterEach
