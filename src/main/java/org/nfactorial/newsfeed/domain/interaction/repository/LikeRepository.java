@@ -14,4 +14,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
 	@Query("SELECT COUNT(l) > 0 FROM Like l WHERE l.post.id = :postId AND l.profile.id = :profileId")
 	boolean existsByPostIdAndProfileId(Long postId, Long profileId);
+
+	Optional<Like> findByPostIdAndProfileId(Long postId, Long profileId);
 }

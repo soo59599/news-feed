@@ -72,4 +72,10 @@ public class PostService implements PostServiceApi {
 				PostCountDto::postCount
 			));
 	}
+
+	@Transactional
+	public Post getPostByIdWithLock(Long postId) {
+		return postRepository.findByIdWithPessimisticLock(postId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+	}
 }

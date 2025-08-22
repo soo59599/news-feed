@@ -24,13 +24,12 @@ public class LikeService {
 	@Transactional
 	public void addLike(Long postId, Long profileId) {
 
-		Profile currentProfile = profileService.getProfileEntityById(profileId);
-		Post currentPost = postService.getPostById(postId);
-
 		if (likeRepository.existsByPostIdAndProfileId(postId, profileId)) {
 			throw new BusinessException(ErrorCode.LIKE_ALREADY_EXISTS);
 		}
 
+		Profile currentProfile = profileService.getProfileEntityById(profileId);
+		Post currentPost = postService.getPostByIdWithLock(postId);
 		likeRepository.save(Like.of(currentPost, currentProfile));
 		currentPost.incrementLikeCount();
 	}
@@ -38,13 +37,11 @@ public class LikeService {
 	@Transactional
 	public void cancelLike(Long postId, Long profileId) {
 
-		Profile savedProfile = profileService.getProfileEntityById(profileId);
-		Post savedPost = postService.getPostById(postId);
-
-		Like savedLike = likeRepository.findByPostAndProfile(savedPost, savedProfile)
+		Like foundLike = likeRepository.findByPostIdAndProfileId(postId, profileId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
 
-		likeRepository.delete(savedLike);
-		savedPost.decrementLikeCount();
+		Post post = postService.getPostByIdWithLock(postId);
+		likeRepository.delete(foundLike);
+		post.decrementLikeCount();
 	}
 }

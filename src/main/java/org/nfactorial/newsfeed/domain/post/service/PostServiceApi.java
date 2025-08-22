@@ -12,4 +12,6 @@ public interface PostServiceApi {
 	long countPostsByProfileId(long profileId);
 
 	Map<Long, Long> countPostsByProfileIds(List<Long> profileIds);
+
+	Post getPostByIdWithLock(Long postId);
 }
