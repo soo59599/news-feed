@@ -1,9 +1,14 @@
 package org.nfactorial.newsfeed.domain.post.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.nfactorial.newsfeed.common.entity.BaseTimeEntity;
+import org.nfactorial.newsfeed.domain.interaction.entity.Like;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +42,9 @@ public class Post extends BaseTimeEntity {
 
 	@Column(nullable = false)
 	private int viewCount;
+
+	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+	private List<Like> likes = new ArrayList<>();
 
 	public static Post of(PostCreateRequest request, Profile profile) {
 		Post post = new Post();
