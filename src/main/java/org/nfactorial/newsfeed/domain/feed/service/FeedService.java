@@ -30,7 +30,7 @@ public class FeedService {
 
 	//피드 전체 조회
 	public PageResponseDto<FeedResponse> findAll(FeedPageRequest feedPageRequest) {
-		long offset = (feedPageRequest.getPageNumber() - 1) * feedPageRequest.getSize();
+		long offset = (feedPageRequest.getPage() - 1) * feedPageRequest.getSize();
 		long limit = feedPageRequest.getSize();
 
 		List<FeedResponseProjection> all = feedRepository.findPostWithNicknameAll(offset, limit,
@@ -45,7 +45,7 @@ public class FeedService {
 
 		Long totalElements = feedRepository.countPostsAll();
 
-		return PageResponseDto.of(offset, limit, totalElements, feedResponseList);
+		return PageResponseDto.of(feedPageRequest.getPage(), limit, totalElements, feedResponseList);
 	}
 
 	//특정 사용자 피드 전체 조회
@@ -54,7 +54,7 @@ public class FeedService {
 
 		Profile profile = profileServiceApi.getProfileEntityById(profileId);
 
-		long offset = (feedPageRequest.getPageNumber() - 1) * feedPageRequest.getSize();
+		long offset = (feedPageRequest.getPage() - 1) * feedPageRequest.getSize();
 		long limit = feedPageRequest.getSize();
 
 		List<FeedAccountPostProjection> accountPostAll = feedRepository.findAccountPostAll(offset, limit,
@@ -72,7 +72,7 @@ public class FeedService {
 				accountPost.getLikeCount(), accountPost.getCommentCount(), accountPost.getViewCount()
 			)).collect(Collectors.toList());
 
-		PageResponseDto<FeedSpecificResponse> postsPage = PageResponseDto.of(offset, limit,
+		PageResponseDto<FeedSpecificResponse> postsPage = PageResponseDto.of(feedPageRequest.getPage(), limit,
 			feedCount, currentPosts);
 
 		return FeedSpecificAccountResponse.of(feedProfileInfoResponse, postsPage);
@@ -80,7 +80,7 @@ public class FeedService {
 
 	//팔로우한 사용자들의 전체 포스트 조회
 	public PageResponseDto<FeedFollowPostResponse> findFollowPostAll(Long followerId, FeedPageRequest feedPageRequest) {
-		long offset = (feedPageRequest.getPageNumber() - 1) * feedPageRequest.getSize();
+		long offset = (feedPageRequest.getPage() - 1) * feedPageRequest.getSize();
 		long limit = feedPageRequest.getSize();
 
 		Profile profile = profileServiceApi.getProfileEntityById(followerId);
@@ -94,7 +94,7 @@ public class FeedService {
 
 		Long followPostCount = feedRepository.countFollowPostAll(profile.getId());
 
-		return PageResponseDto.of(offset, limit, followPostCount, followerPost);
+		return PageResponseDto.of(feedPageRequest.getPage(), limit, followPostCount, followerPost);
 	}
 
 }

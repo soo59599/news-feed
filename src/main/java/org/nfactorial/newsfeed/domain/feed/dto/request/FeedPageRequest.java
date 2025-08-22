@@ -16,7 +16,7 @@ public class FeedPageRequest {
 
 	//현재 페이지 번호
 	@NotNull(message = "페이지 번호 기입은 필수입니다.")
-	private Long pageNumber = 1L;
+	private Long page = 1L;
 
 	//한 페이지에 담긴 데이터 개수
 	@NotNull(message = "데이터 개수를 조회할 사이즈 기입은 필수입니다.")
