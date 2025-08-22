@@ -71,6 +71,9 @@ public class AuthService {
 		if (passwordencoder.matches(loginCommand.password(), account.getPassword()) == false) {
 			throw new BusinessException(ErrorCode.LOGIN_FAILED);
 		}
+		if (account.getDeletedAt() != null) {
+			throw new BusinessException(ErrorCode.LOGIN_FAILED);
+		}
 		return jwtUtil.createToken(account.getId());
 	}
 
