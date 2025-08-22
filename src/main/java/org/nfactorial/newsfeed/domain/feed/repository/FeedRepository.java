@@ -64,12 +64,13 @@ public interface FeedRepository extends JpaRepository<Post, Long> {
 		 	INNER JOIN profile f ON f.id = p.profile_id
 		 	INNER JOIN follow fw ON fw.following_id = f.id
 		 	LEFT JOIN comment c ON c.post_id = p.id
-		 	WHERE fw.follower_id = :follower_id
+		 	WHERE fw.follower_id = :follower_id AND (:startDate IS NULL OR :endDate IS NULL OR DATE(p.created_at) BETWEEN :startDate AND :endDate)
 			GROUP BY p.id
 		 	LIMIT :size OFFSET :offset;
 		""", nativeQuery = true)
 	List<FeedFollowPostProjection> findFollowPostAll(@Param("offset") long offset, @Param("size") long size,
-		@Param("follower_id") Long followerId);
+		@Param("follower_id") Long followerId, @Param("startDate") LocalDate startDate,
+		@Param("endDate") LocalDate endDate);
 
 	@Query(value = """
 			SELECT COUNT(*) FROM post p
