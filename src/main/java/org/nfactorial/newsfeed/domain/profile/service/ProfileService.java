@@ -27,7 +27,7 @@ public class ProfileService implements ProfileServiceApi {
 
 	@Override
 	public boolean isNicknameDuplicated(String nickname) {
-		return profileRepository.existsByNickname(nickname);
+		return profileRepository.existsByNicknameAndDeletedAtIsNull(nickname);
 	}
 
 	@Override
