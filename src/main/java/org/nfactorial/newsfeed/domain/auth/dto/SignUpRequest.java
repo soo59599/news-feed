@@ -10,16 +10,12 @@ import lombok.Builder;
 
 @Builder
 public record SignUpRequest(
-	@NotBlank
-	@Email
+	@NotBlank @Email
 	String email,
-	@NotBlank
-	@Size(min = 8)
-	@Pattern(regexp = AuthConstants.PASSWORD_PATTERN)
+	@NotBlank @Size(min = 8) @Pattern(regexp = AuthConstants.PASSWORD_PATTERN, message = AuthConstants.PASSWORD_FORMAT_ILLEGAL_MESSAGE)
 	String password,
 	@NotBlank
 	String nickname,
 	String introduce,
-	String mbti
-) {
+	String mbti) {
 }

@@ -11,6 +11,6 @@ import lombok.Builder;
 public record ChangePasswordRequest(
 	@NotBlank
 	String currentPassword,
-	@NotBlank @Size(min = 8) @Pattern(regexp = AuthConstants.PASSWORD_PATTERN)
+	@NotBlank @Size(min = 8) @Pattern(regexp = AuthConstants.PASSWORD_PATTERN, message = AuthConstants.PASSWORD_FORMAT_ILLEGAL_MESSAGE)
 	String changePassword) {
 }
