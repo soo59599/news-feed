@@ -252,8 +252,7 @@ src/main/java/org/nfactorial/newsfeed/
 ├── 📁 domain/                  # 핵심 비즈니스 도메인별 구현
 │   ├── 📁 auth/               # 인증 및 계정 관리 (회원가입, 로그인 등)
 │   ├── 📁 post/               # 포스트 생성, 조회, 수정, 삭제
-│   ├── 📁 comment/            # 댓글 생성, 조회, 수정, 삭제
-│   ├── 📁 commenting/         # 포스트에 대한 댓글 기능 통합
+│   ├── 📁 comment/            # 댓글 작성성, 조회, 수정, 삭제
 │   ├── 📁 feed/               # 뉴스피드 생성 및 조회 로직
 │   ├── 📁 interaction/        # 좋아요 및 팔로우 기능
 │   └── 📁 profile/            # 사용자 프로필 관리
