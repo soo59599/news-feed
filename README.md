@@ -168,7 +168,7 @@ News Feed는 현대적인 소셜 미디어 플랫폼의 핵심 기능을 모두 
 
 ```bash
 # 1. 프로젝트 클론
-git clone https://github.com/n-factorial/news-feed.git # 실제 레포지토리 URL로 변경해주세요.
+git clone https://github.com/n-factorial/news-feed.git
 cd news-feed
 
 # 2. 의존성 설치 및 빌드
@@ -263,7 +263,7 @@ src/main/java/org/nfactorial/newsfeed/
 -   **도메인별 패키지 분리**: 각 도메인(예: `auth`, `post`, `comment`)이 독립적인 패키지로 분리되어 있어, 코드의 응집도를 높이고 모듈성을 강화합니다.
 -   **계층형 구조**: `controller` (API 엔드포인트), `service` (비즈니스 로직), `repository` (데이터 접근), `entity` (데이터 모델)의 명확한 계층 분리를 통해 역할과 책임을 명확히 합니다.
 -   **DTO 패턴**: 요청(Request) 및 응답(Response) 객체를 엔티티와 분리하여, 데이터 전송 객체(DTO)를 통해 계층 간 데이터 교환을 안전하고 효율적으로 관리합니다.
--   **Global Exception Handling**: `@ControllerAdvice`를 활용한 전역 예외 처리 시스템을 구축하여, 모든 API 요청에 대해 일관된 에러 응답 형식을 제공합니다.
+-   **Global Exception Handling**: `@RestControllerAdvice`를 활용한 전역 예외 처리 시스템을 구축하여, 모든 API 요청에 대해 일관된 에러 응답 형식을 제공합니다.
 
 ---
 
