@@ -1,4 +1,4 @@
-package org.nfactorial.newsfeed.domain.commenting.dto.result;
+package org.nfactorial.newsfeed.domain.comment.dto.result;
 
 import java.util.List;
 

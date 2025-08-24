@@ -1,4 +1,4 @@
-package org.nfactorial.newsfeed.domain.commenting.dto.command;
+package org.nfactorial.newsfeed.domain.comment.dto.command;
 
 import lombok.Builder;
 

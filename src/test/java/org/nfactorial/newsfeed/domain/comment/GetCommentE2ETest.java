@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.nfactorial.newsfeed.common.dto.GlobalApiResponse;
-import org.nfactorial.newsfeed.domain.commenting.dto.response.GetCommentsFromPostResponse;
+import org.nfactorial.newsfeed.domain.comment.dto.response.GetCommentsFromPostResponse;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;

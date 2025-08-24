@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "deleted_at IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,13 +47,13 @@ public class Profile {
         this.introduce = introduce;
     }
 
-	public void incrementFollowCount() {
-		this.followCount++;
-	}
+    public void incrementFollowCount() {
+        this.followCount++;
+    }
 
-	public void decrementFollowCount() {
-		if (this.followCount > 0) {
-			this.followCount--;
-		}
-	}
+    public void decrementFollowCount() {
+        if (this.followCount > 0) {
+            this.followCount--;
+        }
+    }
 }

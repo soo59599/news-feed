@@ -1,8 +1,8 @@
-package org.nfactorial.newsfeed.domain.commenting.dto.response;
+package org.nfactorial.newsfeed.domain.comment.dto.response;
 
 import java.util.List;
 
-import org.nfactorial.newsfeed.domain.commenting.dto.result.CommentListByPostResult;
+import org.nfactorial.newsfeed.domain.comment.dto.result.CommentListByPostResult;
 
 public record GetCommentsFromPostResponse(
 	List<SimpleComment> comments) {

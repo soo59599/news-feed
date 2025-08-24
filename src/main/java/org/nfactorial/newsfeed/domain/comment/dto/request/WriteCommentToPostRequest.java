@@ -1,4 +1,4 @@
-package org.nfactorial.newsfeed.domain.commenting.dto.request;
+package org.nfactorial.newsfeed.domain.comment.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 
