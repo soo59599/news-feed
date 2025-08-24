@@ -24,6 +24,8 @@ public class PostService implements PostServiceApi {
 
 	private final PostRepository postRepository;
 
+	private final GetPostByIdHelper getPostByIdHelper;
+
 	@Transactional
 	public PostUpdateResponse update(Long postId, PostUpdateRequest request,
 		AuthProfileDto currentUserProfile) {
@@ -55,8 +57,7 @@ public class PostService implements PostServiceApi {
 	@Override
 	@Transactional(readOnly = true)
 	public Post getPostById(long postId) {
-		return postRepository.findById(postId)
-			.orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+		return getPostByIdHelper.execute(postId);
 	}
 
 	@Override
@@ -69,8 +70,7 @@ public class PostService implements PostServiceApi {
 		return postRepository.countPostsByProfileIds(profileIds).stream()
 			.collect(Collectors.toMap(
 				PostCountDto::profileId,
-				PostCountDto::postCount
-			));
+				PostCountDto::postCount));
 	}
 
 	@Transactional
