@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.nfactorial.newsfeed.common.entity.BaseTimeEntity;
+import org.nfactorial.newsfeed.domain.comment.entity.Comment;
 import org.nfactorial.newsfeed.domain.interaction.entity.Like;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
@@ -45,6 +46,9 @@ public class Post extends BaseTimeEntity {
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private List<Like> likes = new ArrayList<>();
+
+	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+	private List<Comment> comments = new ArrayList<>();
 
 	public static Post of(PostCreateRequest request, Profile profile) {
 		Post post = new Post();
