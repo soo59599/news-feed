@@ -232,7 +232,7 @@ News Feed 백엔드 서비스에서 제공하는 주요 API 엔드포인트 목�
 | :---------- | :---------------------------------------- | :---------------------------------------- |
 | `GET`       | `/api/v1/feeds`                           | 전체 피드 (옵션: `startDate=YYYY-MM-DD`, `endDate=YYYY-MM-DD`) |
 | `GET`       | `/api/v1/feeds/following`                 | 팔로잉 피드 (옵션: `startDate=YYYY-MM-DD`, `endDate=YYYY-MM-DD`) |
-| `GET`       | `/api/v1/profiles/{profileId}/feeds`      | 특정 사용자 피드 (옵션: `startDate=YYYY-MM-DD`, `endDate=YYYY-MM-DD`) |
+| `GET`       | `/api/v1/profiles/{profileId}/feeds`      | 특정 사용자 피드 |
 
 ---
 
