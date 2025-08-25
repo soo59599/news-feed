@@ -43,7 +43,7 @@ public class FeedService {
 				feed.getCreatedAt(), feed.getViewCount()
 			)).collect(Collectors.toList());
 
-		Long totalElements = feedRepository.countPostsAll();
+		Long totalElements = feedRepository.countPostsAll(feedPageRequest.getStartDate(), feedPageRequest.getEndDate());
 
 		return PageResponseDto.of(feedPageRequest.getPage(), limit, totalElements, feedResponseList);
 	}
@@ -92,7 +92,8 @@ public class FeedService {
 				follow.getCommentCount(), follow.getCreatedAt(), follow.getViewCount()
 			)).collect(Collectors.toList());
 
-		Long followPostCount = feedRepository.countFollowPostAll(profile.getId());
+		Long followPostCount = feedRepository.countFollowPostAll(profile.getId(), feedPageRequest.getStartDate(),
+			feedPageRequest.getEndDate());
 
 		return PageResponseDto.of(feedPageRequest.getPage(), limit, followPostCount, followerPost);
 	}
