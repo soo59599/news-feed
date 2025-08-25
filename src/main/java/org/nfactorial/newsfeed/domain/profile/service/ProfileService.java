@@ -37,8 +37,7 @@ public class ProfileService implements ProfileServiceApi {
 		Profile newProfile = new Profile(
 			createProfileCommand.nickname(),
 			createProfileCommand.mbti(),
-			createProfileCommand.introduce()
-		);
+			createProfileCommand.introduce());
 
 		Profile savedProfile = profileRepository.save(newProfile);
 		return savedProfile.getId();
@@ -53,7 +52,6 @@ public class ProfileService implements ProfileServiceApi {
 		profile.softDelete();
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public ProfileResponse getProfileById(long profileId) {
 		Profile profile = getProfileEntityById(profileId);
@@ -61,7 +59,6 @@ public class ProfileService implements ProfileServiceApi {
 		return ProfileResponse.from(profile, postCount);
 	}
 
-	@Override
 	@Transactional
 	public ProfileResponse updateProfile(long profileId, UpdateProfileCommand command) {
 		Profile profile = profileRepository.findById(profileId)
