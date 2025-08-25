@@ -1,0 +1,101 @@
+package org.nfactorial.newsfeed.domain.feed.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.nfactorial.newsfeed.domain.feed.dto.request.FeedPageRequest;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedAccountPostProjection;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedFollowPostResponse;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedProfileInfoResponse;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedResponseProjection;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedResponse;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedSpecificAccountResponse;
+import org.nfactorial.newsfeed.domain.feed.dto.response.FeedSpecificResponse;
+import org.nfactorial.newsfeed.domain.feed.dto.response.PageResponseDto;
+import org.nfactorial.newsfeed.domain.feed.repository.FeedRepository;
+import org.nfactorial.newsfeed.domain.profile.entity.Profile;
+import org.nfactorial.newsfeed.domain.profile.service.ProfileServiceApi;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class FeedService {
+
+	private final FeedRepository feedRepository;
+	private final ProfileServiceApi profileServiceApi;
+
+	//피드 전체 조회
+	public PageResponseDto<FeedResponse> findAll(FeedPageRequest feedPageRequest) {
+		long offset = (feedPageRequest.getPage() - 1) * feedPageRequest.getSize();
+		long limit = feedPageRequest.getSize();
+
+		List<FeedResponseProjection> all = feedRepository.findPostWithNicknameAll(offset, limit,
+			feedPageRequest.getStartDate(), feedPageRequest.getEndDate());
+
+		List<FeedResponse> feedResponseList = all.stream()
+			.map(feed -> FeedResponse.of(
+				feed.getNickname(), feed.getContent(),
+				feed.getLikeCount(), feed.getCommentCount(),
+				feed.getCreatedAt(), feed.getViewCount()
+			)).collect(Collectors.toList());
+
+		Long totalElements = feedRepository.countPostsAll(feedPageRequest.getStartDate(), feedPageRequest.getEndDate());
+
+		return PageResponseDto.of(feedPageRequest.getPage(), limit, totalElements, feedResponseList);
+	}
+
+	//특정 사용자 피드 전체 조회
+	public FeedSpecificAccountResponse findAccountPostAll(Long profileId,
+		FeedPageRequest feedPageRequest) {
+
+		Profile profile = profileServiceApi.getProfileEntityById(profileId);
+
+		long offset = (feedPageRequest.getPage() - 1) * feedPageRequest.getSize();
+		long limit = feedPageRequest.getSize();
+
+		List<FeedAccountPostProjection> accountPostAll = feedRepository.findAccountPostAll(offset, limit,
+			profile.getId());
+
+		Long feedCount = feedRepository.countAccountPostAll(profile.getId());
+
+		FeedProfileInfoResponse feedProfileInfoResponse = FeedProfileInfoResponse.of(profile.getNickname(),
+			profile.getFollowCount(), feedCount, profile.getMbti(),
+			profile.getIntroduce());
+
+		List<FeedSpecificResponse> currentPosts = accountPostAll.stream()
+			.map(accountPost -> FeedSpecificResponse.of(
+				accountPost.getNickname(), accountPost.getCreatedAt(), accountPost.getContent(),
+				accountPost.getLikeCount(), accountPost.getCommentCount(), accountPost.getViewCount()
+			)).collect(Collectors.toList());
+
+		PageResponseDto<FeedSpecificResponse> postsPage = PageResponseDto.of(feedPageRequest.getPage(), limit,
+			feedCount, currentPosts);
+
+		return FeedSpecificAccountResponse.of(feedProfileInfoResponse, postsPage);
+	}
+
+	//팔로우한 사용자들의 전체 포스트 조회
+	public PageResponseDto<FeedFollowPostResponse> findFollowPostAll(Long followerId, FeedPageRequest feedPageRequest) {
+		long offset = (feedPageRequest.getPage() - 1) * feedPageRequest.getSize();
+		long limit = feedPageRequest.getSize();
+
+		Profile profile = profileServiceApi.getProfileEntityById(followerId);
+
+		List<FeedFollowPostResponse> followerPost = feedRepository.findFollowPostAll(offset, limit, profile.getId(),
+				feedPageRequest.getStartDate(), feedPageRequest.getEndDate())
+			.stream().map(follow -> FeedFollowPostResponse.of(
+				follow.getNickname(), follow.getContent(), follow.getLikeCount(),
+				follow.getCommentCount(), follow.getCreatedAt(), follow.getViewCount()
+			)).collect(Collectors.toList());
+
+		Long followPostCount = feedRepository.countFollowPostAll(profile.getId(), feedPageRequest.getStartDate(),
+			feedPageRequest.getEndDate());
+
+		return PageResponseDto.of(feedPageRequest.getPage(), limit, followPostCount, followerPost);
+	}
+
+}
