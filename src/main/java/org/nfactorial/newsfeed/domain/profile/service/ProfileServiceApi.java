@@ -15,6 +15,10 @@ public interface ProfileServiceApi {
 
 	void deleteFromAccountId(long accountId);
 
+	ProfileResponse getProfileById(long profileId);
+
+	ProfileResponse updateProfile(long profileId, UpdateProfileCommand command);
+
 	List<ProfileSummaryDto> findProfileSummariesByIds(List<Long> profileIds);
 
 	Profile getProfileEntityById(long profileId);
