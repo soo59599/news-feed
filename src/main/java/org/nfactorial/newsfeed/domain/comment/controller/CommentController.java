@@ -53,6 +53,7 @@ public class CommentController {
 		return GlobalApiResponse.of(SuccessCode.OK, new UpdateCommentResponse(commentId, updatedContent));
 	}
 
+	//대댓글 보기
 	@GetMapping("/posts/{postId}/comments")
 	public GlobalApiResponse<?> getCommentsFromPost(@PathVariable("postId")
 	long postId) {

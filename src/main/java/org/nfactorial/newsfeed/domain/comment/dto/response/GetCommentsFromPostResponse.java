@@ -1,7 +1,6 @@
 package org.nfactorial.newsfeed.domain.comment.dto.response;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.nfactorial.newsfeed.domain.comment.dto.result.CommentListByPostResult;
 
@@ -18,10 +17,11 @@ public record GetCommentsFromPostResponse(
 		long id,
 		String nickname,
 		String content,
-		List<SimpleComment> children
-	) {
+		List<SimpleComment> children) {
 		public static SimpleComment of(CommentListByPostResult.SimpleComment comment) {
-			List<SimpleComment> childList = comment.children().stream().map(SimpleComment::of).toList();
+			List<SimpleComment> childList = comment.children().stream()
+				.map(SimpleComment::of)
+				.toList();
 			return new SimpleComment(
 				comment.id(),
 				comment.nickname(),

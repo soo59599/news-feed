@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.nfactorial.newsfeed.domain.post.dto.PostCountDto;
 import org.nfactorial.newsfeed.domain.post.entity.Post;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,4 +30,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("select p from Post p where p.id = :id")
 	Optional<Post> findByIdWithPessimisticLock(@Param("id") Long id);
+
+	@EntityGraph(attributePaths = {"files", "comments", "profile", "likes"})
+	Optional<Post> findById(Long id);
 }

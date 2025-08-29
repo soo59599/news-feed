@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.nfactorial.newsfeed.common.entity.BaseTimeEntity;
 import org.nfactorial.newsfeed.domain.comment.entity.Comment;
+import org.nfactorial.newsfeed.domain.file.entity.File;
 import org.nfactorial.newsfeed.domain.interaction.entity.Like;
 import org.nfactorial.newsfeed.domain.post.dto.request.PostCreateRequest;
 import org.nfactorial.newsfeed.domain.profile.entity.Profile;
@@ -50,6 +51,9 @@ public class Post extends BaseTimeEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private List<Comment> comments = new ArrayList<>();
 
+	@OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<File> files = new ArrayList<>();
+
 	public static Post of(PostCreateRequest request, Profile profile) {
 		Post post = new Post();
 		post.content = request.content();
@@ -71,5 +75,14 @@ public class Post extends BaseTimeEntity {
 		if (this.likeCount > 0) {
 			this.likeCount--;
 		}
+	}
+
+	public void addFile(File file) {
+		this.files.add(file);
+		file.setPost(this);
+	}
+
+	public void incrementViewCount(){
+		this.viewCount++;
 	}
 }
