@@ -34,23 +34,23 @@ public class FileUploadController {
 
 	@Value("${file.upload.dir}")
 	private String uploadDir;
-
-	@PostMapping("/upload")
-	public GlobalApiResponse<FileUploadResponse> uploadFile(
-		@RequestParam("file") MultipartFile file) {
-
-		try {
-			FileUploadResult result = fileUploadService.saveFile(file);
-
-			FileUploadResponse response = FileUploadResponse.from(result);
-
-			return GlobalApiResponse.of(SuccessCode.CREATED, response);
-
-		} catch (Exception e) {
-
-			return GlobalApiResponse.of(ErrorCode.FILE_FAIL_UPLOAD, null);
-		}
-	}
+	//
+	// @PostMapping("/upload")
+	// public GlobalApiResponse<FileUploadResponse> uploadFile(
+	// 	@RequestParam("file") MultipartFile file) {
+	//
+	// 	try {
+	// 		FileUploadResult result = fileUploadService.saveFile(file);
+	//
+	// 		FileUploadResponse response = FileUploadResponse.from(result);
+	//
+	// 		return GlobalApiResponse.of(SuccessCode.CREATED, response);
+	//
+	// 	} catch (Exception e) {
+	//
+	// 		return GlobalApiResponse.of(ErrorCode.FILE_FAIL_UPLOAD, null);
+	// 	}
+	// }
 
 	@GetMapping("/download/{filename}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {

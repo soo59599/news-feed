@@ -35,8 +35,11 @@ public enum ErrorCode implements GlobalResponseCode {
 	COMMENT_INVALID_PARENT("COMMENT-400", "유효하지 않은 부모 댓글입니다.", HttpStatus.BAD_REQUEST),
 
 	//file
-	FILE_NAME_NOT_FOUND("FILE-404", "파일명이 없습니다.",  HttpStatus.NOT_FOUND),
-	FILE_FAIL_UPLOAD("FILE-400", "파일 업로드에 실패했습니다.", HttpStatus.BAD_REQUEST);
+	FILE_NAME_MISSING("FILE-404", "파일명이 없습니다.",  HttpStatus.NOT_FOUND),
+	FILE_FAIL_UPLOAD("FILE-400", "파일 업로드에 실패했습니다.", HttpStatus.BAD_REQUEST),
+	FILE_EMPTY("FILE-400-1", "파일이 비어있습니다.", HttpStatus.BAD_REQUEST),
+	FILE_TYPE_NOT_ALLOWED("FILE-400-2","허용되지 않는 파일 형식입니다.", HttpStatus.BAD_REQUEST)
+	;
 
 	private final String code;
 	private final String message;
