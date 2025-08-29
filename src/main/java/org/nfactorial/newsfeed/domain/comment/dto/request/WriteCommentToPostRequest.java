@@ -4,5 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public record WriteCommentToPostRequest(
 	@NotBlank
-	String content) {
+	String content,
+	Long parentId) {
 }

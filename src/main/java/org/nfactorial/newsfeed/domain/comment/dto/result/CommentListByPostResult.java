@@ -16,12 +16,17 @@ public record CommentListByPostResult(
 	public record SimpleComment(
 		long id,
 		String nickname,
-		String content) {
+		String content,
+		List<SimpleComment> children) {
 		public static SimpleComment of(Comment comment) {
+			List<SimpleComment> childList = comment.getChildren().stream()
+				.map(SimpleComment::of)
+				.toList();
 			return new SimpleComment(
 				comment.getId(),
 				comment.getProfile().getNickname(),
-				comment.getContent());
+				comment.getContent(),
+				childList);
 		}
 	}
 }

@@ -2,6 +2,8 @@ package org.nfactorial.newsfeed.domain.comment.service;
 
 import java.util.List;
 
+import org.nfactorial.newsfeed.common.code.ErrorCode;
+import org.nfactorial.newsfeed.common.exception.BusinessException;
 import org.nfactorial.newsfeed.domain.comment.dto.command.WriteCommentToPostCommand;
 import org.nfactorial.newsfeed.domain.comment.entity.Comment;
 import org.nfactorial.newsfeed.domain.comment.repository.CommentRepository;
@@ -28,6 +30,18 @@ public class PostCommentingService {
         Post post = postService.getPostById(command.postId());
         Profile profile = profileService.getProfileEntityById(command.profileId());
         Comment comment = Comment.write(post, profile, command.content());
+
+        if(command.parentId()!=null){
+            Comment parentComment = commentRepository.findById(command.parentId())
+                .orElseThrow(()-> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+
+            if(parentComment.getDepth()>=1){
+                throw new BusinessException(ErrorCode.COMMENT_INVALID_PARENT);
+            }
+
+            comment.setParent(parentComment);
+        }
+
         Comment savedComment = commentRepository.save(comment);
         return WriteCommentToPostResult.builder()
             .id(savedComment.getId())

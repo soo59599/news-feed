@@ -68,7 +68,7 @@ public class CommentController {
 		@Valid @RequestBody
 		WriteCommentToPostRequest request) {
 		WriteCommentToPostCommand command = WriteCommentToPostCommand.of(postId, authProfile.profileId(),
-			request.content());
+			request.content(), request.parentId());
 		WriteCommentToPostResult result = postCommentingService.writeCommentToPost(command);
 		WriteCommentToPostResponse response = WriteCommentToPostResponse.of(result);
 		return GlobalApiResponse.of(SuccessCode.OK, response);

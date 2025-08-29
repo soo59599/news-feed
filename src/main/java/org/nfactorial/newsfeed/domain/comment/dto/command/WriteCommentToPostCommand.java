@@ -6,13 +6,15 @@ import lombok.Builder;
 public record WriteCommentToPostCommand(
 	long profileId,
 	long postId,
-	String content) {
+	String content,
+	Long parentId) {
 
-	public static WriteCommentToPostCommand of(long postId, long profileId, String content) {
+	public static WriteCommentToPostCommand of(long postId, long profileId, String content, Long parentId) {
 		return WriteCommentToPostCommand.builder()
 			.postId(postId)
 			.profileId(profileId)
 			.content(content)
+			.parentId(parentId)
 			.build();
 	}
 }
