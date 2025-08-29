@@ -32,7 +32,11 @@ public enum ErrorCode implements GlobalResponseCode {
 	// Comment
 	COMMENT_NOT_FOUND("COMMENT-404", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
 	COMMENT_NOT_YOURS("COMMENT-403", "본인의 댓글이 아닙니다.", HttpStatus.FORBIDDEN),
-	COMMENT_INVALID_PARENT("COMMENT-400", "유효하지 않은 부모 댓글입니다.", HttpStatus.BAD_REQUEST);
+	COMMENT_INVALID_PARENT("COMMENT-400", "유효하지 않은 부모 댓글입니다.", HttpStatus.BAD_REQUEST),
+
+	//file
+	FILE_NAME_NOT_FOUND("FILE-404", "파일명이 없습니다.",  HttpStatus.NOT_FOUND),
+	FILE_FAIL_UPLOAD("FILE-400", "파일 업로드에 실패했습니다.", HttpStatus.BAD_REQUEST);
 
 	private final String code;
 	private final String message;
