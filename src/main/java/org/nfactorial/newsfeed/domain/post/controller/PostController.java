@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -67,9 +69,9 @@ public class PostController {
 	@GetMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
 	public GlobalApiResponse<PostGetOneResponse> viewPost(@PathVariable
-	Long postId) {
+	Long postId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
 
-		PostGetOneResponse response = postInteractionService.viewPost(postId);
+		PostGetOneResponse response = postInteractionService.viewPost(postId, httpRequest, httpResponse);
 
 		return GlobalApiResponse.of(SuccessCode.OK, response);
 	}
